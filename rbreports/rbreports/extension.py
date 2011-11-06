@@ -5,21 +5,18 @@ from reviewboard.extensions.base import Extension
 from reviewboard.extensions.hooks import DashboardHook, URLHook
 
 
-class ReportsDashboardHook(DashboardHook):
-    def get_entries(self):
-        return [{
-            'label': 'Reports',
-            'url': settings.SITE_ROOT + 'reports/',
-        }]
-
-
 class ReportsExtension(Extension):
     is_configurable = True
 
     def __init__(self):
-        Extension.__init__(self)
+        super(Extension, self).__init__()
 
         self.url_hook = URLHook(self, patterns('',
             (r'^reports/', include('rbreports.urls'))))
 
-        self.dashboard_hook = ReportsDashboardHook(self)
+        self.dashboard_hook = DashboardHook(entries=[
+            {
+                'label': 'Reports',
+                'url': settings.SITE_ROOT = 'reports/',
+            }
+        ])

@@ -1,0 +1,30 @@
+{% extends base_template %}
+{% load i18n %}
+{% load reviewtags %}
+{% load staticfiles %}
+
+{% block title %}{{xml.filename}}{% if caption %}: {{caption}}{% endif %}{% endblock %}
+
+{% block scripts-post %}
+{{block.super}}
+<script language="javascript" src="{{MEDIA_URL}}ext/xml-review-ui-extension/js/xmlReviewableView.js"></script>
+
+<script language="javascript">
+    $(document).ready(function() {
+        var view = new RB.XMLReviewableView({
+            model: new RB.FileAttachmentReviewable({
+                attachmentID: '{{xml.id}}',
+                caption: '{{caption|escapejs}}',
+                rendered: '{{review_ui.render|escapejs}}'
+            })
+        });
+
+        view.render();
+        $('#xml-review-ui-container').append(view.$el);
+    });
+</script>
+{% endblock %}
+
+{% block review_ui_content %}
+<div id="xml-review-ui-container"></div>
+{% endblock %}

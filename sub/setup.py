@@ -7,7 +7,7 @@ VERSION = "0.1"
 setup(
     name=PACKAGE,
     version=VERSION,
-    description="Extension reviewboard-together",
+    description="Add TogetherJS to Review Board",
     author="None",
     packages=["reviewboard_together"],
     entry_points={

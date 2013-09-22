@@ -8,7 +8,7 @@ setup(
     name=PACKAGE,
     version=VERSION,
     description="Add TogetherJS to Review Board",
-    author="None",
+    author="Mike Conley",
     packages=["reviewboard_together"],
     entry_points={
         'reviewboard.extensions':

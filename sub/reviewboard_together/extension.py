@@ -11,7 +11,7 @@ class ReviewBoardTogether(Extension):
             template_name="reviewboard_together/base.html")
         self.button = HeaderActionHook(self, [{
           "id": "launch-together",
-          "label": "TogetherJS",
+          "label": "Chat",
           "url": "#"
         }]);
 

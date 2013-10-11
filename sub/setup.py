@@ -10,9 +10,6 @@ setup(
     description="Add TogetherJS to Review Board",
     author="Mike Conley",
     packages=["reviewboard_together"],
-    install_requires=[
-      'ReviewBoard>=1.8alpha0'
-    ],
     entry_points={
         'reviewboard.extensions':
             '%s = reviewboard_together.extension:ReviewBoardTogether' % PACKAGE,

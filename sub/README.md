@@ -10,4 +10,4 @@ reviewboard_together is an extension for Review Board that lets users chat via T
 
 ## I installed the extension. Why isn't it working?
 
-Currently, this extension only works with a development install of Review Board. The HeaderActionHooks that the extension depends on will hopefully be backported to 1.7 soon, and then this extension will then be compatible with the release version of Review Board.
+Currently, this extension only works with Review Board 1.7.15 and higher. Make sure your Review Board instance is up to date.

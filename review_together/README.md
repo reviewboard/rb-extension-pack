@@ -10,7 +10,7 @@ reviewboard_together is an extension for Review Board that lets users chat via T
 
 ## Installation
 
-Fork, or [download the contents of this repository](https://github.com/mikeconley/reviewboard_together/archive/master.zip) onto the machine with your Review Board instance running on it. Then, run:
+Clone, or otherwise [download the contents of this repository](https://github.com/mikeconley/reviewboard_together/archive/master.zip) onto the machine with your Review Board instance running on it. Then, run:
 
     python setup.py
 

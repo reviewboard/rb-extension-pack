@@ -1,0 +1,35 @@
+@major-color: #AA0000;
+@minor-color: #CC5500;
+@info-color: #006600;
+
+
+.comment-severity {
+  font-weight: bold;
+  margin: 1.5em 0;
+
+  &.comment-severity-major {
+    color: @major-color;
+  }
+
+  &.comment-severity-minor {
+    color: @minor-color;
+  }
+
+  &.comment-severity-info {
+    color: @info-color;
+  }
+}
+
+.comment-dlg {
+  .save-major {
+    color: @major-color;
+  }
+
+  .save-minor {
+    color: @minor-color;
+  }
+
+  .save-info {
+    color: @info-color;
+  }
+}

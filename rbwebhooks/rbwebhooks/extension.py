@@ -25,7 +25,7 @@ class RBWebHooksExtension(Extension):
     }
 
     def __init__(self, *args, **kwargs):
-        super(RBWebHooksExtension, self).__init__()
+        super(RBWebHooksExtension, self).__init__(*args, **kwargs)
         self.settings.load()
         self.signal_handlers = SignalHandlers(self)
 

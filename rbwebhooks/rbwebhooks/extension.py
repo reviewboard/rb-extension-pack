@@ -6,8 +6,9 @@
 # event occurs.
 import json
 import logging
-import urllib2
-import urllib
+
+import requests
+from requests.exceptions import RequestException
 
 from reviewboard.extensions.base import Extension
 
@@ -42,31 +43,38 @@ class RBWebHooksExtension(Extension):
 
         for target in targets:
             self._send_web_request(
+                hook_id,
                 target.url,
                 request_payload,
                 self.settings['attempts'])
 
-    def _send_web_request(self, url, request_payload, attempts=1):
+    def _send_web_request(self, hook_id, url, request_payload, attempts=1):
         """
         Send out a web request and retry on failure.
 
         Currently this is a blocking operation. devising a way to send
         these requests without blocking would be bennificial.
         """
-        request = urllib2.Request(url)
-        arguments = urllib.urlencode({
-            'payload': self._encode_payload(request_payload),
-        })
-        # The addition of data automatically converts request to a POST.
-        request.add_data(arguments)
+        logging.info("Sending WebHook request: %s %s" % (hook_id, request_payload))
 
+        auth = None
+        username = self.settings['username']
+        password = self.settings['password']
+        if username and password:
+            auth = (username, password)
+
+        headers = {'X-ReviewBoard-Event': hook_id}
+        data = self._encode_payload(request_payload)
+
+        err = None
         while attempts:
             try:
-                return urllib2.urlopen(request)
-            except urllib2.URLError:
+                return requests.post(url, auth=auth, headers=headers, data=data)
+            except RequestException as ex:
                 attempts -= 1
+                err = ex
 
-        logging.warning("Sending WebHook Request failed: %s " % url)
+        logging.warning("Sending WebHook request failed: %s [%s]" % (url, err))
         return None
 
     def _encode_payload(self, request_payload):

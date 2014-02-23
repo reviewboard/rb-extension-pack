@@ -1,2 +1,0 @@
-{% if review_requests %}{% include "rbreports/review_request-moinmoin.txt" %}{% endif %}
-{% if reviews %}{% include "rbreports/review-moinmoin.txt" %}{% endif %}

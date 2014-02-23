@@ -43,7 +43,5 @@ class MotdExtension(Extension):
 
     is_configurable = True
 
-    def __init__(self, *args, **kwargs):
-        super(MotdExtension, self).__init__(*args, **kwargs)
-
+    def initialize(self):
         MotdTemplateHook(self)

@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns
+from django.conf.urls import patterns
 
 from rbmotd.extension import MotdExtension
 from rbmotd.forms import MotdSettingsForm

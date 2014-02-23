@@ -1,5 +1,9 @@
-from reviewboard.extensions.base import Extension
+from reviewboard.extensions.base import Extension, JSExtension
 from reviewboard.extensions.hooks import CommentDetailDisplayHook
+from reviewboard.urls import reviewable_url_names, review_request_url_names
+
+
+apply_to_url_names = set(reviewable_url_names + review_request_url_names)
 
 
 class SeverityCommentDetailDisplay(CommentDetailDisplayHook):
@@ -59,6 +63,11 @@ class SeverityCommentDetailDisplay(CommentDetailDisplayHook):
         return self.SEVERITY_LABELS.get(severity, 'Unknown')
 
 
+class SeverityJSExtension(JSExtension):
+    model_class = 'RBSeverity.Extension'
+    apply_to = apply_to_url_names
+
+
 class SeverityExtension(Extension):
     """Extends Review Board with comment severity support.
 
@@ -70,21 +79,21 @@ class SeverityExtension(Extension):
         'Name': 'Comment Severity',
     }
 
-    js_model_class = 'RBSeverity.Extension'
+    js_extensions = [SeverityJSExtension]
 
     css_bundles = {
         'default': {
-            'source_filenames': ['css/severity.less']
+            'source_filenames': ['css/severity.less'],
+            'apply_to': apply_to_url_names,
         }
     }
 
     js_bundles = {
-        'default': {
-            'source_filenames': ['js/severity.js']
+        'severity-review': {
+            'source_filenames': ['js/severity.js'],
+            'apply_to': apply_to_url_names,
         }
     }
 
-    def __init__(self, *args, **kwargs):
-        super(SeverityExtension, self).__init__(*args, **kwargs)
-
+    def initialize(self):
         SeverityCommentDetailDisplay(self)

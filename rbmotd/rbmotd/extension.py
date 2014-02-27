@@ -41,6 +41,12 @@ class MotdExtension(Extension):
         }
     }
 
+    default_settings = {
+        'enabled': False,
+        'message': '',
+        'message_id': '',
+    }
+
     is_configurable = True
 
     def initialize(self):

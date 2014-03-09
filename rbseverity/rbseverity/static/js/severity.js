@@ -163,7 +163,7 @@ RBSeverity.ReviewDialogCommentHookView = Backbone.View.extend({
  */
 RBSeverity.Extension = RB.Extension.extend({
     initialize: function() {
-        _.super(this).initialize.call(this);
+        _super(this).initialize.call(this);
 
         new RB.CommentDialogHook({
             extension: this,

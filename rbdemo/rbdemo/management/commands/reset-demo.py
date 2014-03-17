@@ -10,6 +10,7 @@ from django.conf import settings
 from django.core.management import execute_from_command_line
 from django.core.management.base import CommandError, NoArgsCommand
 from django.utils import timezone
+from djblets.siteconfig.models import SiteConfiguration
 from reviewboard.changedescs.models import ChangeDescription
 from reviewboard.diffviewer.models import DiffSet
 from reviewboard.reviews.models import (Comment, FileAttachmentComment,
@@ -40,12 +41,18 @@ class Command(NoArgsCommand):
 
         cmd = sys.argv[0]
 
+        # Preserve the old site configuration data.
+        siteconfig = SiteConfiguration.objects.get_current()
+
         # Reset the state of the database.
         execute_from_command_line([cmd, 'flush', '--noinput',
                                    '--no-initial-data'])
 
         # Now load in the new fixtures.
         execute_from_command_line([cmd, 'loaddata'] + demo_fixtures)
+
+        # Save the siteconfig back out.
+        siteconfig.save()
 
         # Update the timestamps on everything.
         now = timezone.now()

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from reviewboard.extensions.packaging import setup
+from setuptools import find_packages
 
 
 PACKAGE = 'rbdemo'
@@ -15,10 +16,7 @@ setup(
     author_email='support@beanbaginc.com',
     maintainer='Beanbag, Inc.',
     maintainer_email='support@beanbaginc.com',
-    packages=['rbdemo'],
-    install_requires=[
-        'ReviewBoard>=2.0beta4.dev',
-    ],
+    packages=find_packages(),
     entry_points={
         'reviewboard.extensions': [
             'rbdemo = rbdemo.extension:DemoExtension',

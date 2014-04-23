@@ -1,0 +1,14 @@
+{% load djblets_extensions %}
+{% ext_js_bundle extension "js_default" %}
+{% ext_css_bundle extension "css_default" %}
+
+<div id="checklist"></div>
+
+<script>
+    $(document).ready(function() {
+        new Checklist.ChecklistView({
+            user_id: "{{user.pk}}",
+            review_request_id: "{{review_request.id}}"
+        });
+    });
+</script>

@@ -1,0 +1,94 @@
+@dark-grey: #333333;
+@cross-image: '../images/cross.png';
+@min-image: '../images/min.png';
+@max-image: '../images/max.png';
+@exit-image: '../images/exit.png';
+
+/* Entire container for checklist. To avoid Backbone.js zombies, the actual
+ * view is stored in a div inside #checklist. */
+#checklist div {
+  margin: 10px;
+  background-color: @dark-grey;
+  padding: 10px;
+  width: 20%;
+  max-height: 75%;
+  position: fixed;
+  z-index: 1000;
+  right: 0px;
+  top: 50px;
+  opacity: 0.75;
+}
+
+#checklist div p {
+  color: white;
+  margin-top: 0;
+  margin-bottom: -15px;
+  float: left;
+  font-size: 14px;
+}
+
+#checklist div ul {
+  list-style-type: none;
+}
+
+input[name="checklist_itemDesc"] {
+  width: 75%;
+  margin-top: 20px;
+}
+
+/* The minimize and maximize buttons */
+.checklist_min {
+  background-image: url(@min-image);
+}
+
+.checklist_max {
+  background-image: url(@max-image);
+}
+
+#checklist_toggle_size {
+  width: 16px;
+  height: 16px;
+  float: right;
+  margin-top: -2px;
+  margin-bottom: 2px;
+  margin-left: 2px;
+  clear: both;
+}
+
+/* Exit and delete checklist */
+#checklist_exit {
+  background-image: url(@exit-image);
+  width: 16px;
+  height: 16px;
+  float: right;
+  margin-top: -2px;
+  margin-bottom: 2px;
+  clear: left;
+}
+
+
+input[name="checklist_checkbox"] {
+  margin-right: 10px;
+  margin-left: 2px;
+}
+
+.checklist_item, .checklist_del_item {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffea38;
+  margin-left: -40px;
+}
+
+.checklist_item a {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffea38;
+  text-decoration: none;
+}
+
+.checklist_del_item {
+  background-image: url(@cross-image);
+  width: 16px;
+  height: 15px;
+  float: right;
+}

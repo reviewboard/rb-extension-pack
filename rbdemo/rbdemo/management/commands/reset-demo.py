@@ -75,6 +75,13 @@ class Command(NoArgsCommand):
 
         shutil.copytree(demo_upload_path, dest_uploaded_path)
 
+        # Create the images and files directories if they don't exist.
+        for dirname in ['images', 'files']:
+            path = os.path.join(dest_uploaded_path, dirname)
+
+            if not os.path.exists(path):
+                os.mkdir(path)
+
         # Set ownership for all files and directories.
         uid = getpwnam(demo_upload_owner[0]).pw_uid
         gid = getgrnam(demo_upload_owner[1]).gr_gid

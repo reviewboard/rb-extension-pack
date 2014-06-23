@@ -13,7 +13,10 @@ class Command(NoArgsCommand):
 
     EXCLUDE_APPS = [
         'accounts.reviewrequestvisit',
+        'admin.logentry',
+        'auth.permission',
         'contenttypes',
+        'django_evolution',
         'sessions',
         'siteconfig',
     ]

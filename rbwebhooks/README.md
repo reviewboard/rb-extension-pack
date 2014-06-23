@@ -1,6 +1,13 @@
 Webhooks Extension
 ==================
 
+Status
+------
+
+Review Board 2.1 will ship with a built-in webhooks framework, which provides
+more events and better payloads. This extension is deprecated.
+
+
 Overview
 --------
 
@@ -13,10 +20,3 @@ Requirements
 ------------
 
 This extension requires Review Board 1.7.x or higher.
-
-
-Status
-------
-
-This extension is currently unmaintained and is missing several features.
-Contributions are welcome.

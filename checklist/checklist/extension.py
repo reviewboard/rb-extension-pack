@@ -16,8 +16,9 @@ class Checklist(Extension):
     js_model_class = 'Checklist.Extension'
 
     css_bundles = {
-        'css_default': {
-            'source_filenames': ['css/index.css']
+        'default': {
+            'source_filenames': ['css/style.less'],
+            'apply_to': reviewable_url_names,
         }
     }
 

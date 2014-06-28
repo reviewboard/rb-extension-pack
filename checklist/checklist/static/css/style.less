@@ -1,94 +1,125 @@
-@dark-grey: #333333;
-@cross-image: '../images/cross.png';
-@min-image: '../images/min.png';
-@max-image: '../images/max.png';
-@exit-image: '../images/exit.png';
+@dark-grey: #262626;
+@light-blue: #BBD3F3;
+@light-grey: #888a85;
+@hover-blue: #97B6EB;
 
-/* Entire container for checklist. To avoid Backbone.js zombies, the actual
- * view is stored in a div inside #checklist. */
-#checklist div {
-  margin: 10px;
-  background-color: @dark-grey;
-  padding: 10px;
-  width: 20%;
-  max-height: 75%;
-  position: fixed;
-  z-index: 1000;
-  right: 0px;
-  top: 50px;
-  opacity: 0.75;
+#checklist {
+  .checklist_box {
+    background: @dark-grey;
+    border-radius: 6px;
+    padding: 1px;
+    border: 1px @light-grey solid;
+    width: 250px;
+    overflow: auto;
+    position: fixed;
+    right: 15px;
+    top: 100px;
+  }
+
+  div {
+    display: block;
+  }
+
+  li {
+    display: list-item;
+  }
+
+  a {
+    color: #000;
+    text-decoration: none;
+  }
 }
 
-#checklist div p {
-  color: white;
-  margin-top: 0;
-  margin-bottom: -15px;
+.checklist_header {
+  background: @light-blue;
+  border-radius: 5px 5px 0 0;
   float: left;
-  font-size: 14px;
+  width: 100%;
+  border-bottom: 1px @dark-grey solid;
+  overflow: auto;
 }
 
-#checklist div ul {
-  list-style-type: none;
+.checklist_title {
+  float: left;
+  padding: 4px;
+  font-size: 10pt;
 }
 
-input[name="checklist_itemDesc"] {
+.checklist_actions {
+  a {
+    color: black;
+    cursor: pointer;
+    display: block;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-left: 1px @dark-grey solid;
+  }
+
+  .checklist_header_btn {
+    float: right;
+    list-style: none;
+    margin: 0px;
+
+    li {
+      float: left;
+
+      &:hover {
+        background: @hover-blue;
+      }
+    }
+  }
+}
+
+.checklist_body {
+  background: @light-blue;
+  float: left;
+  width: 100%;
+  overflow: auto;
+
+  ul.checklist_items {
+    padding-left: 0px;
+    list-style: none;
+    margin: 0px;
+
+    li {
+      border-bottom: 1px @dark-grey solid;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 5px;
+
+      .checklist_del_item {
+        float: right;
+        margin-right: 5px;
+        color: black;
+        cursor: pointer;
+        text-decoration: none;
+        display: none;
+      }
+
+      &:hover .checklist_del_item {
+        display: block;
+     }
+    }
+  }
+}
+
+input[name="checklist_item_description"] {
+  margin: 8px;
+  margin-top: 10px;
   width: 75%;
-  margin-top: 20px;
 }
-
-/* The minimize and maximize buttons */
-.checklist_min {
-  background-image: url(@min-image);
-}
-
-.checklist_max {
-  background-image: url(@max-image);
-}
-
-#checklist_toggle_size {
-  width: 16px;
-  height: 16px;
-  float: right;
-  margin-top: -2px;
-  margin-bottom: 2px;
-  margin-left: 2px;
-  clear: both;
-}
-
-/* Exit and delete checklist */
-#checklist_exit {
-  background-image: url(@exit-image);
-  width: 16px;
-  height: 16px;
-  float: right;
-  margin-top: -2px;
-  margin-bottom: 2px;
-  clear: left;
-}
-
 
 input[name="checklist_checkbox"] {
   margin-right: 10px;
-  margin-left: 2px;
 }
 
-.checklist_item, .checklist_del_item {
-  font-size: 14px;
-  font-weight: bold;
-  color: #ffea38;
-  margin-left: -40px;
+.checklist_footer {
+  background: @light-blue;
+  float: left;
+  width: 100%;
+  overflow: auto;
 }
 
-.checklist_item a {
-  font-size: 14px;
-  font-weight: bold;
-  color: #ffea38;
-  text-decoration: none;
-}
-
-.checklist_del_item {
-  background-image: url(@cross-image);
-  width: 16px;
-  height: 15px;
-  float: right;
+#checklist_clear {
+  margin-left: -25px;
 }

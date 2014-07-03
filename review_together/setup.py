@@ -1,25 +1,25 @@
 from setuptools import setup
 
 
-PACKAGE = "reviewboard-together"
+PACKAGE = "review-together"
 VERSION = "0.1"
 
 setup(
     name=PACKAGE,
     version=VERSION,
-    description="Add TogetherJS to Review Board",
+    description="Add chat functionality to Review Board",
     author="Mike Conley",
-    packages=["reviewboard_together"],
+    packages=["review_together"],
     entry_points={
         'reviewboard.extensions':
-            '%s = reviewboard_together.extension:ReviewBoardTogether' % PACKAGE,
+            '%s = review_together.extension:ReviewTogether' % PACKAGE,
     },
     package_data={
-        'reviewboard_together': [
+        'review_together': [
             'htdocs/css/*.css',
             'htdocs/js/*.js',
-            'templates/reviewboard_together/*.txt',
-            'templates/reviewboard_together/*.html',
+            'templates/review_together/*.txt',
+            'templates/review_together/*.html',
         ],
     }
 )

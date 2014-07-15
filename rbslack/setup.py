@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-from __future__ import unicode_literals
-
 from reviewboard.extensions.packaging import setup
 
 from rbslack import get_package_version
@@ -12,6 +10,7 @@ setup(
     name=PACKAGE,
     version=get_package_version(),
     description='Review Board integration for slack.com',
+    url='http://www.reviewboard.org/',
     author='Beanbag, Inc.',
     author_email='support@beanbaginc.com',
     maintainer='Beanbag, Inc.',
@@ -25,10 +24,10 @@ setup(
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
         'Framework :: Review Board',
-        'Intended Audience :: System Administrators',
+        'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-    ],
+    ]
 )

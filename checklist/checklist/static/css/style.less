@@ -1,0 +1,126 @@
+@dark-grey: #262626;
+@light-blue: #BBD3F3;
+@light-grey: #888a85;
+@hover-blue: #97B6EB;
+
+#checklist {
+  .checklist_box {
+    background: @dark-grey;
+    border-radius: 6px;
+    padding: 1px;
+    border: 1px @light-grey solid;
+    width: 250px;
+    overflow: auto;
+    position: fixed;
+    right: 15px;
+    top: 100px;
+  }
+
+  div {
+    display: block;
+  }
+
+  li {
+    display: list-item;
+  }
+
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+}
+
+.checklist_header {
+  background: @light-blue;
+  border-radius: 5px 5px 0 0;
+  float: left;
+  width: 100%;
+  border-bottom: 1px @dark-grey solid;
+  overflow: auto;
+}
+
+.checklist_title {
+  float: left;
+  padding: 4px;
+  font-size: 10pt;
+}
+
+.checklist_actions {
+  a {
+    color: black;
+    cursor: pointer;
+    display: block;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-left: 1px @dark-grey solid;
+  }
+
+  .checklist_header_btn {
+    float: right;
+    list-style: none;
+    margin: 0px;
+
+    li {
+      float: left;
+
+      &:hover {
+        background: @hover-blue;
+      }
+    }
+  }
+}
+
+.checklist_body {
+  background: @light-blue;
+  float: left;
+  width: 100%;
+  overflow: auto;
+
+  ul.checklist_items {
+    padding-left: 0px;
+    list-style: none;
+    margin: 0px;
+
+    li {
+      border-bottom: 1px @dark-grey solid;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 5px;
+
+      .checklist_del_item {
+        float: right;
+        margin-right: 5px;
+        color: black;
+        cursor: pointer;
+        text-decoration: none;
+        display: none;
+      }
+
+      &:hover .checklist_del_item {
+        display: block;
+     }
+    }
+  }
+}
+
+input[name="checklist_item_description"] {
+  margin: 8px;
+  margin-top: 10px;
+  width: 90%;
+}
+
+input[name="checklist_checkbox"] {
+  margin-right: 10px;
+}
+
+.checklist_footer {
+  background: @light-blue;
+  border-radius: 0 0 5px 5px;
+  float: left;
+  width: 100%;
+  overflow: auto;
+}
+
+#checklist_clear {
+  margin-left: -25px;
+}

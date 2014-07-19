@@ -1,4 +1,4 @@
-var RBSeverity = {};
+RBSeverity = {};
 
 
 /*

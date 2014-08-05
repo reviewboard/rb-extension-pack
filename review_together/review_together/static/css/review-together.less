@@ -1,0 +1,113 @@
+/*
+ * The following styles override the default styles provided by TogetherJS.
+ * The objective is to make the extension look more like native part of
+ * ReviewBoard.
+*/
+
+@import (reference) "@{STATIC_ROOT}rb/css/defs.less";
+
+@border-blue: #728eac;
+
+#togetherjs-container.togetherjs {
+  font-family: inherit;
+
+  a {
+    color: @navbar-text-color !important;
+    font-size: 110% !important;
+  }
+
+  a:hover {
+    text-decoration: none !important;
+  }
+
+  #togetherjs-audio-button.togetherjs-active {
+    background-color: @headerbar-bg-active !important;
+  }
+
+  #togetherjs-buttons #togetherjs-share-button.togetherjs-active {
+    background-color: @headerbar-bg-active !important;
+  }
+
+  #togetherjs-chat-button.togetherjs-active {
+    background-color: @headerbar-bg-active !important;
+  }
+
+  #togetherjs-dock {
+    background-color: @headerbar-bg !important;
+
+    #togetherjs-buttons {
+      .togetherjs-button:hover {
+        background-color: @headerbar-bg-active;
+      }
+    }
+
+    #togetherjs-dock-anchor {
+      img {
+        display: none;
+      }
+    }
+  }
+
+  #togetherjs-menu {
+    background-color: @headerbar-bg;
+    border: none;
+    color: white;
+    font-family: inherit;
+    text-decoration: none;
+
+    .togetherjs-hr {
+      border-bottom: none;
+    }
+
+    .togetherjs-menu-hr-avatar {
+      border-bottom: none;
+    }
+
+    .togetherjs-menu-item:hover {
+      background-color: @headerbar-bg-active;
+    }
+  }
+
+  #togetherjs-rtc-info section.togetherjs-buttons button {
+    background-color: #e6e6e6 !important;
+    border: 1px solid #ccc !important;
+    border-bottom-color: #bbb !important;
+    color: #333 !important;
+    font-family: inherit;
+    margin: 2px 2px 2px 0.2em !important;
+    padding: 3px 8px !important;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75) !important;
+  }
+
+  .togetherjs-window {
+    border: 1px @box-border-color solid;
+
+    header {
+      background: @light-blue !important;
+      border-bottom: 1px solid @border-blue !important;
+      color: black !important;
+      font-family: inherit;
+      padding: 5px 0 0 10px !important;
+      text-align: left !important;
+
+      button.togetherjs-close {
+        border-left: 1px solid @border-blue !important;
+        height: 29px !important;
+        margin: -5px 0 0 0 !important;
+      }
+    }
+
+    .togetherjs-share-link {
+      background-color: #eeeeee;
+      border: 1px black solid;
+      .border-radius(6px);
+      font-size: 1.2em;
+      margin: 0;
+      padding: 2px;
+    }
+
+    .togetherjs-share-link:focus {
+      border: 1px black solid !important;
+    }
+  }
+}

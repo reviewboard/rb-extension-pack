@@ -32,18 +32,18 @@ class ReviewChecklist(models.Model):
         self.save()
 
     def edit_item_desc(self, itemID, item_description):
-        if (str(itemID) in self.checklist_items):
+        if str(itemID) in self.checklist_items:
             itemDict = self.checklist_items.get(str(itemID))
             itemDict['description'] = item_description
             self.save()
 
     def toggle_item_status(self, itemID):
-        if (str(itemID) in self.checklist_items):
+        if str(itemID) in self.checklist_items:
             itemDict = self.checklist_items.get(str(itemID))
             itemDict['finished'] = not itemDict['finished']
             self.save()
 
     def delete_item(self, itemID):
-        if (str(itemID) in self.checklist_items):
+        if str(itemID) in self.checklist_items:
             self.checklist_items.pop(str(itemID))
             self.save()

@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from djblets.webapi.decorators import webapi_request_fields
 from reviewboard.webapi.base import WebAPIResource
 from reviewboard.webapi.decorators import (webapi_check_local_site,
-                                             webapi_login_required)
+                                           webapi_login_required)
 from reviewboard.webapi.resources import resources
 
 from checklist.models import ReviewChecklist

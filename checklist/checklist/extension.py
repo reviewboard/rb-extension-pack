@@ -1,10 +1,10 @@
 # Checklist Extension for Review Board.
 from djblets.webapi.resources import (register_resource_for_model,
-                                        unregister_resource_for_model)
+                                      unregister_resource_for_model)
 from reviewboard.extensions.base import Extension
 from reviewboard.extensions.hooks import TemplateHook
 from reviewboard.urls import reviewable_url_names
-from checklist.checklistResource import checklist_resource
+from checklist.resources import checklist_resource
 from checklist.models import ReviewChecklist
 
 

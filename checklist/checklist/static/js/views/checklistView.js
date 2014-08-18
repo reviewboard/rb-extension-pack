@@ -3,19 +3,10 @@ Checklist.ChecklistItemView = Backbone.View.extend({
     tagName: 'li',
     className: 'checklist_item',
 
-    /* We pass in the checklistAPI as an argument so that each item has
-     * access to the API also. */
-
     events: {
         'click input[name="checklist_checkbox"]': 'toggleStatus',
         'click a.checklist_edit_desc': 'editItemDesc',
-        'keydown input[name="checklist_editDesc"]': 'editItemDescDB'
-    },
-
-    initialize: function(options) {
-        _.bindAll(this, 'render', 'toggleStatus', 'toggleStatusDB');
-        this.checklistAPI = options.checklistAPI;
-        this.listenTo(this.model, 'change', this.render);
+        'keydown input[name="checklist_edit_description"]': 'editItemDescDB'
     },
 
     /* This tempate is for the regular look of an item. */
@@ -26,9 +17,33 @@ Checklist.ChecklistItemView = Backbone.View.extend({
         '<a id=<%= id %> class="checklist_del_item" href="#">X</a>'
     ].join('')),
 
+    /*
+     * This template is for the textfield that allows the user to edit
+     * the item description.
+     */
+    edit_template: _.template([
+        '<input type="checkbox" name="checklist_checkbox" ',
+        '<% if (finished) { %> checked="checked" <% } %> >',
+        '<input name="checklist_edit_description" value="<%= description %>"</input>',
+        '<a id=<%= id %> class="checklist_del_item" href="#">X</a>'
+    ].join('')),
+
+    initialize: function(options) {
+        _.bindAll(this, 'render', 'toggleStatus', 'toggleStatusDB');
+
+        /*
+         * We pass in the checklistAPI as an argument so that each item has
+         * access to the API also.
+         */
+        this.checklistAPI = options.checklistAPI;
+
+        this.listenTo(this.model, 'change', this.render);
+    },
+
     render: function() {
-        this.$el.attr('id', 'checklist_item' + this.model.get("id"));
-        this.$el.html(this.template(this.model.attributes));
+        this.$el
+            .attr('id', 'checklist_item' + this.model.get("id"))
+            .html(this.template(this.model.attributes));
         return this;
     },
 
@@ -43,24 +58,14 @@ Checklist.ChecklistItemView = Backbone.View.extend({
 
     /* Toggle the status of the item on the back-end. */
     toggleStatusDB: function() {
-        var item_id = this.model.get("id");
         this.checklistAPI.set({
             toggle: true,
-            checklist_item_id: item_id,
+            checklist_item_id: this.model.get('id'),
             item_description: null
         });
 
         this.checklistAPI.save(null, this);
     },
-
-    /* This template is for the textfield that allows the user to edit
-     * the item description. */
-    edit_template: _.template([
-        '<input type="checkbox" name="checklist_checkbox" ',
-        '<% if (finished) { %> checked="checked" <% } %> >',
-        '<input name="checklist_editDesc" value="<%= description %>"</input>',
-        '<a id=<%= id %> class="checklist_del_item" href="#">X</a>'
-    ].join('')),
 
     /* When an item is clicked, a textfield should show up. */
     editItemDesc: function(event) {
@@ -70,28 +75,30 @@ Checklist.ChecklistItemView = Backbone.View.extend({
         return false;
     },
 
-    /* When the user presses enter on the textfield, the form should be
-     * submitted to the back-end. */
+    /*
+     * When the user presses enter on the textfield, the form should be
+     * submitted to the back-end.
+     */
     editItemDescDB: function(event) {
+        var itemDesc;
+
         if (event.keyCode === 13) {
-            item_desc = $('input[name=checklist_editDesc]').val();
+            itemDesc = $('input[name=checklist_edit_description]').val();
 
             this.checklistAPI.set({
-                item_description: item_desc,
+                item_description: itemDesc,
                 checklist_item_id: this.model.get("id")
             });
 
-            var saveOptions = {
+            this.checklistAPI.save({
                 success: function(data) {
                     /* Update the Backbone model's description. */
                     this.model.set({
-                        description: item_desc
+                        description: itemDesc
                     });
                     this.$el.html(this.template(this.model.attributes));
                 }
-            };
-
-            this.checklistAPI.save(saveOptions, this);
+            }, this);
 
             return false;
         }
@@ -106,49 +113,6 @@ Checklist.ChecklistView = Backbone.View.extend({
         'click a#checklist_toggle_size': 'toggleViewSize',
         'click a#checklist_exit': 'deleteChecklist',
         'click a#checklist_clear': 'clearItemInput'
-    },
-
-    initialize: function(options) {
-        /* Bind every function that uses 'this' as current object. */
-        _.bindAll(this, 'render', 'addItemDB', 'addItem', 'appendItem',
-                  'removeItemDB', 'removeItem', 'toggleViewSize',
-                  'createNewChecklist', 'deleteChecklist');
-
-        this.review_request_id = options.review_request_id;
-        this.user_id = options.user_id;
-
-        this.checklistAPI = new Checklist.ChecklistAPI();
-        this.savedHeight = 0;
-        this.isMinimized = false;
-        this.CHECKLIST_MINIMIZED_HEIGHT = 25;
-
-        /* Create a new checklist. */
-        this.collection = new Checklist.Checklist();
-        this.collection.bind('add', this.appendItem);
-        this.createNewChecklist();
-    },
-
-    /* Create or GET a checklist on the server side. Let the API handle
-    this one. */
-    createNewChecklist: function() {
-        this.checklistAPI.set({
-            user_id: this.user_id,
-            review_request_id: this.review_request_id,
-        });
-
-        var self = this;
-        var saveOptions = {
-            success: function(data) {
-                this.render();
-                /* The checklist we receive from the back-end may not be empty,
-                   so we need to add the items it already has to the collection. */
-                $.each(self.checklistAPI.checklist_items, function (ind, item) {
-                    self.addItem(item.id, item.description, item.finished);
-                });
-            }
-        };
-
-        this.checklistAPI.save(saveOptions, this);
     },
 
     checklistTemplate: _.template([
@@ -173,6 +137,53 @@ Checklist.ChecklistView = Backbone.View.extend({
         '</div>'
     ].join('')),
 
+    initialize: function(options) {
+        /* Bind every function that uses 'this' as current object. */
+        _.bindAll(this, 'render', 'addItemDB', 'addItem', 'appendItem',
+                  'removeItemDB', 'removeItem', 'toggleViewSize',
+                  'createNewChecklist', 'deleteChecklist');
+
+        this.review_request_id = options.review_request_id;
+        this.user_id = options.user_id;
+
+        this.checklistAPI = new Checklist.ChecklistAPI();
+        this.savedHeight = 0;
+        this.isMinimized = false;
+        this.CHECKLIST_MINIMIZED_HEIGHT = 25;
+
+        /* Create a new checklist. */
+        this.collection = new Checklist.Checklist();
+        this.collection.bind('add', this.appendItem);
+        this.createNewChecklist();
+    },
+
+    /*
+     * Create or GET a checklist on the server side. Let the API handle
+     * this one.
+     */
+    createNewChecklist: function() {
+        var self = this;
+
+        this.checklistAPI.set({
+            user_id: this.user_id,
+            review_request_id: this.review_request_id
+        });
+
+        this.checklistAPI.save({
+            success: function(data) {
+                this.render();
+                /*
+                 * The checklist we receive from the back-end may not be empty,
+                 * so we need to add the items it already has to the collection.
+                 */
+                $.each(self.checklistAPI.checklist_items,
+                       function(ind, item) {
+                    self.addItem(item.id, item.description, item.finished);
+                });
+            }
+        }, this);
+    },
+
     /* Render the checklist on the page. */
     render: function() {
         this.$el.html(this.checklistTemplate());
@@ -192,6 +203,7 @@ Checklist.ChecklistView = Backbone.View.extend({
         var heightChange = 0,
             $checklistBox = this.$('.checklist_box'),
             $sizeTextToggle = this.$('#checklist_toggle_size');
+
         this.isMinimized = !this.isMinimized;
 
         if (this.isMinimized) {
@@ -200,7 +212,6 @@ Checklist.ChecklistView = Backbone.View.extend({
             /* Narrow down the checklist. Remember the current height. */
             this.savedHeight = $checklistBox.height();
             heightChange = this.CHECKLIST_MINIMIZED_HEIGHT;
-
         } else {
             /* Maximize the view */
             $sizeTextToggle.text("Min");
@@ -217,38 +228,38 @@ Checklist.ChecklistView = Backbone.View.extend({
 
     /* Add the new item to the backend. */
     addItemDB: function(event) {
+        var self = this,
+            $itemDescriptionInput,
+            itemDesc;
+
         if (event.keyCode === 13) {
-            var $itemDescriptionInput = this.$('input[name=checklist_item_description]'),
-                item_desc = $itemDescriptionInput.val();
+            $itemDescriptionInput = this.$('input[name=checklist_item_description]');
+            itemDesc = $itemDescriptionInput.val();
             $itemDescriptionInput.val('');
 
-            if (item_desc === '') {
+            if (itemDesc === '') {
                 alert("Please type a description");
                 return;
             }
 
             this.checklistAPI.set({
-                item_description: item_desc,
+                item_description: itemDesc,
                 checklist_item_id: null
             });
 
-            var self = this;
-            var saveOptions = {
+            this.checklistAPI.save({
                 success: function(data) {
                     var item_id = data.attributes.checklist_item_id;
-                    self.addItem(item_id, item_desc, false);
+                    self.addItem(item_id, itemDesc, false);
                 }
-            };
-
-            this.checklistAPI.save(saveOptions, this);
+            }, this);
         }
     },
 
     /* Add the new item to the collection on the front end. */
-    addItem: function(item_id, item_desc, status) {
-        var item = new Checklist.ChecklistItem();
-        item.set({
-            description: item_desc,
+    addItem: function(item_id, itemDesc, status) {
+        var item = new Checklist.ChecklistItem({
+            description: itemDesc,
             id: item_id,
             finished: status
         });
@@ -260,11 +271,10 @@ Checklist.ChecklistView = Backbone.View.extend({
 
     /* Create and render the new checklist item. */
     appendItem: function(item) {
-        var self = this;
         var checklistItemView = new Checklist.ChecklistItemView({
-            model: item,
-            checklistAPI: self.checklistAPI
-        });
+                model: item,
+                checklistAPI: this.checklistAPI
+            });
         this._$ul.append(checklistItemView.render().el);
 
         return false;
@@ -299,15 +309,14 @@ Checklist.ChecklistView = Backbone.View.extend({
 
     deleteChecklist: function() {
         var response = confirm("This action will delete the entire checklist." +
-            "This cannot be undone.");
+                               "This cannot be undone.");
 
         if (response) {
-            var saveOptions = {
+            this.checklistAPI.destroy({
                 success: function(data) {
                     this.remove();
                 }
-            };
-            this.checklistAPI.destroy(saveOptions, this);
+            }, this);
         }
 
         return false;

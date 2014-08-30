@@ -79,6 +79,63 @@
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75) !important;
   }
 
+  .togetherjs-modal {
+
+    header {
+      background: @light-blue !important;
+      border-bottom: 1px solid @border-blue !important;
+      color: black !important;
+      font-family: inherit;
+      padding: 5px 0 0 10px !important;
+      text-align: left !important;
+
+      button.togetherjs-close {
+        border-left: 1px solid @border-blue !important;
+        height: 29px !important;
+        margin: -5px 0 0 0 !important;
+      }
+    }
+
+    section.togetherjs-buttons button.togetherjs-modal-dont-join, button.togetherjs-dismiss {
+      background-color: #e6e6e6 !important;
+      border: 1px solid #ccc !important;
+      border-bottom-color: #bbb !important;
+      color: #333 !important;
+      font-family: inherit;
+      margin: 2px 2px 2px 0.2em !important;
+      padding: 3px 8px !important;
+      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75) !important;
+    }
+  }
+
+  .togetherjs-notification {
+    background: #fff;
+    border: 1px @box-border-color solid;
+    padding-left: 15px;
+
+    &:hover {
+      background-color: #fff;
+    }
+
+    img.togetherjs-notification-logo {
+      display: none;
+    }
+
+    #togetherjs-chat-notifier-message {
+      .togetherjs-chat-item {
+        font-family: inherit;
+
+        .togetherjs-inline-text .togetherjs-person-name {
+          font-family: inherit;
+        }
+      }
+
+      .togetherjs-chat-left-item {
+        background: #fff;
+      }
+    }
+  }
+
   .togetherjs-window {
     border: 1px @box-border-color solid;
 

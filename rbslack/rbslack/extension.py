@@ -43,7 +43,6 @@ class SlackExtension(Extension):
     def notify(self, text, fields):
         """Send a webhook notification to Slack."""
         payload = {
-            'channel': self.settings['channel'],
             'username': self.settings['notify_username'],
             'icon_url': 'http://images.reviewboard.org/rbslack/logo.png',
             'attachments': [
@@ -54,6 +53,11 @@ class SlackExtension(Extension):
                 },
             ],
         }
+
+        channel = self.settings['channel']
+
+        if channel:
+            payload['channel'] = channel
 
         urlopen(Request(self.settings['webhook_url'],
                         json.dumps(payload)))

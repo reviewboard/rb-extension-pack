@@ -113,6 +113,9 @@ class SlackExtension(Extension):
                           review_request.pk, type)
             return
 
+        if not user:
+            user = review_request.submitter
+
         review_request_link = self.get_review_request_text_link(review_request)
         user_link = self.get_user_text_link(user, review_request.local_site)
         fields = [
@@ -165,6 +168,9 @@ class SlackExtension(Extension):
 
     def on_review_request_reopened(self, user, review_request, **kwargs):
         """Handler for the review_request_reopened signal."""
+        if not user:
+            user = review_request.submitter
+
         review_request_link = self.get_review_request_text_link(review_request)
         user_link = self.get_user_text_link(user, review_request.local_site)
         fields = [

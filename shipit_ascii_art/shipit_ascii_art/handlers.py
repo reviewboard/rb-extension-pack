@@ -26,7 +26,6 @@ class SignalHandlers(object):
         # Only add the ship-it ascii art if this review has a ship-it
         if review.ship_it:
             rich = hasattr(review, 'rich_text') and review.rich_text
-            print 'Got a published review with ship it!, rich=%s' % rich
 
             if rich:
                 review.body_top += '\n```\n'

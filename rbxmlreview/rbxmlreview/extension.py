@@ -1,9 +1,8 @@
 # rbxmlreview Extension for Review Board.
 from mimetypes import XMLMimetype
 from reviewboard.extensions.base import Extension
-from reviewboard.extensions.hooks import ReviewUIHook, \
-                                         FileAttachmentThumbnailHook, \
-                                         URLHook
+from reviewboard.extensions.hooks import (ReviewUIHook,
+                                          FileAttachmentThumbnailHook)
 
 from rbxmlreview import XMLReviewUI
 

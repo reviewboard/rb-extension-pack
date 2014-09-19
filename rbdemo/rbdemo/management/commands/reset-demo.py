@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import os
 import shutil
 import sys
+import tempfile
 from grp import getgrnam
 from pwd import getpwnam
 
@@ -39,6 +40,45 @@ class Command(NoArgsCommand):
                 'settings.DEMO_UPLOAD_PATH_OWNER must be set to '
                 '(username, group)')
 
+        # Validate the user and group from DEMO_UPLOAD_PATH_OWNER.
+        try:
+            uid = getpwnam(demo_upload_owner[0]).pw_uid
+            gid = getgrnam(demo_upload_owner[1]).gr_gid
+        except KeyError:
+            raise CommandError(
+                'settings.DEMO_UPLOAD_PATH_OWNER was set to an invalid '
+                'username or group.')
+
+        # Check for file permissions on the directories and files we need.
+        for fixture in demo_fixtures:
+            if not os.access(fixture, os.R_OK):
+                raise CommandError(
+                    'Fixtures "%s" is not accessible by this user.'
+                    % fixture)
+
+        if not os.access(demo_upload_path, os.R_OK):
+            raise CommandError(
+                'Path "%s" is not accessible by this user.'
+                % demo_upload_path)
+
+        dest_uploaded_path = os.path.join(settings.MEDIA_ROOT, 'uploaded')
+
+        for path in (dest_uploaded_path,
+                     os.path.join(dest_uploaded_path, '..')):
+            if not os.access(path, os.W_OK):
+                raise CommandError(
+                    'Path "%s" is not writeable by this user.' % path)
+
+        # Check that we can chown files.
+        tmpfile = tempfile.mkstemp(prefix='rbdemo-')[1]
+
+        try:
+            os.chown(tmpfile, uid, gid)
+        except OSError:
+            raise CommandError('This user cannot change ownership of files.')
+        finally:
+            os.unlink(tmpfile)
+
         cmd = sys.argv[0]
 
         # Preserve the old site configuration data.
@@ -68,8 +108,6 @@ class Command(NoArgsCommand):
         DiffSet.objects.update(timestamp=now)
 
         # Replace the uploaded files.
-        dest_uploaded_path = os.path.join(settings.MEDIA_ROOT, 'uploaded')
-
         if os.path.exists(dest_uploaded_path):
             shutil.rmtree(dest_uploaded_path)
 
@@ -83,9 +121,6 @@ class Command(NoArgsCommand):
                 os.mkdir(path)
 
         # Set ownership for all files and directories.
-        uid = getpwnam(demo_upload_owner[0]).pw_uid
-        gid = getgrnam(demo_upload_owner[1]).gr_gid
-
         for root, dirs, files in os.walk(dest_uploaded_path):
             for path in dirs:
                 full_path = os.path.join(root, path)

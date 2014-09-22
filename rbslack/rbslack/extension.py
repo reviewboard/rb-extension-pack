@@ -59,8 +59,12 @@ class SlackExtension(Extension):
         if channel:
             payload['channel'] = channel
 
-        urlopen(Request(self.settings['webhook_url'],
-                        json.dumps(payload)))
+        try:
+            urlopen(Request(self.settings['webhook_url'],
+                            json.dumps(payload)))
+        except Exception as e:
+            logging.error('Failed to send notification to slack.com: %s',
+                          e, exc_info=True)
 
     def format_link(self, path, text):
         """Format the given URL and text to be shown in a Slack message.

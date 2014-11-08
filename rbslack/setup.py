@@ -10,7 +10,7 @@ setup(
     name=PACKAGE,
     version=get_package_version(),
     description='Review Board integration for slack.com',
-    url='http://www.reviewboard.org/',
+    url='https://www.beanbaginc.com',
     author='Beanbag, Inc.',
     author_email='support@beanbaginc.com',
     maintainer='Beanbag, Inc.',
@@ -21,7 +21,7 @@ setup(
             '%s = rbslack.extension:SlackExtension' % PACKAGE,
     },
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Framework :: Review Board',
         'Intended Audience :: Developers',

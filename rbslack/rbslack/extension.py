@@ -20,10 +20,17 @@ from reviewboard.site.urlresolvers import local_site_reverse
 
 class SlackExtension(Extension):
     """An extension to integrate Review Board with slack.com"""
+    metadata = {
+        'Name': 'Slack Integration',
+        'Summary': 'Notifies channels on Slack.com for any review '
+                   'request activity.',
+    }
+
     is_configurable = True
+
     default_settings = {
         'webhook_url': '',
-        'channel': '#notifications',
+        'channel': '',
         'notify_username': 'Review Board',
     }
 

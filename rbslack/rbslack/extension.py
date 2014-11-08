@@ -4,7 +4,6 @@ import json
 import logging
 
 from django.contrib.sites.models import Site
-from django.utils.html import escape
 from django.utils.six.moves.urllib.request import Request, urlopen
 from djblets.siteconfig.models import SiteConfiguration
 from reviewboard.extensions.base import Extension
@@ -81,11 +80,18 @@ class SlackExtension(Extension):
         """
         siteconfig = SiteConfiguration.objects.get_current()
         site = Site.objects.get_current()
+
+        # Slack only wants these three entities replaced, rather than
+        # all the entities that Django's escape() would attempt to replace.
+        text = text.replace('&', '&amp;')
+        text = text.replace('<', '&lt;')
+        text = text.replace('>', '&gt;')
+
         return '<%s://%s%s|%s>' % (
             siteconfig.get('site_domain_method'),
             site.domain,
             path,
-            escape(text))
+            text)
 
     def get_user_text_link(self, user, local_site):
         """Get the Slack-formatted link to a user page."""

@@ -6,8 +6,7 @@ from review_together.forms import ReviewTogetherSettingsForm
 
 urlpatterns = patterns(
     '',
-    url(
-        r'^$',
+    url(r'^$',
         'reviewboard.extensions.views.configure_extension',
         {
             'ext_class': ReviewTogether,

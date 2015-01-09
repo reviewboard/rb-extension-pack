@@ -15,7 +15,7 @@ TogetherJS.
 Clone, this directory onto the machine with your Review Board instance running
 on it. Then, run:
 
-    python setup.py
+    python setup.py install
 
 to do the install.
 

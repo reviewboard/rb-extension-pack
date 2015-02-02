@@ -6,7 +6,12 @@ from reviewboard.extensions.hooks import HeaderActionHook
 class ReviewTogetherJSExtension(JSExtension):
     model_class = 'ReviewTogetherJS.Extension'
 
+
 class ReviewTogether(Extension):
+    default_settings = {
+        'hub_url': '',
+    }
+
     # This adds Review Board specific styling of the TogetherJS extension.
     css_bundles = {
         'default': {

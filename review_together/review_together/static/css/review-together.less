@@ -7,6 +7,7 @@
 @import (reference) "@{STATIC_ROOT}rb/css/defs.less";
 
 @border-blue: #728eac;
+@scroll-indicator-z-index: 10000;
 
 #togetherjs-container.togetherjs {
   font-family: inherit;
@@ -174,4 +175,5 @@
   opacity: 0.5;
   position: absolute;
   width: 100%;
+  z-index: @scroll-indicator-z-index;
 }

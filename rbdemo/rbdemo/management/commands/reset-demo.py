@@ -16,6 +16,7 @@ from reviewboard.changedescs.models import ChangeDescription
 from reviewboard.diffviewer.models import DiffSet
 from reviewboard.reviews.models import (Comment, FileAttachmentComment,
                                         ReviewRequest, Review)
+from reviewboard.scmtools.models import Tool
 
 
 class Command(NoArgsCommand):
@@ -87,6 +88,7 @@ class Command(NoArgsCommand):
         # Reset the state of the database.
         execute_from_command_line([cmd, 'flush', '--noinput',
                                    '--no-initial-data'])
+        Tool.objects.all().delete()
 
         # Now load in the new fixtures.
         execute_from_command_line([cmd, 'loaddata'] + demo_fixtures)

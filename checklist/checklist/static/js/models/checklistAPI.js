@@ -27,6 +27,10 @@ Checklist.ChecklistAPI = RB.BaseResource.extend({
 
     toJSON: function () {
         return {
+            /*
+             * If this.get('attribute') is null, it will be undefined and
+             * not sent to the server.
+             */
             user_id: this.get('user_id') || undefined,
             review_request_id: this.get('review_request_id') || undefined,
             checklist_item_id: this.get('checklist_item_id') || undefined,

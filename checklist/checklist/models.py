@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from djblets.util.fields import JSONField
+from djblets.db.fields import JSONField
 from reviewboard.reviews.models import ReviewRequest
 
 
@@ -47,3 +47,15 @@ class ReviewChecklist(models.Model):
         if str(itemID) in self.checklist_items:
             self.checklist_items.pop(str(itemID))
             self.save()
+
+
+class ChecklistTemplate(models.Model):
+    """A template for checklist items.
+
+    Templates can be imported into checklist instances to quickly populate them
+    with common items.
+    """
+
+    owner = models.ForeignKey(User)
+    title = models.CharField(max_length=255)
+    items = JSONField()

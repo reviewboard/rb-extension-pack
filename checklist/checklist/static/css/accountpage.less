@@ -1,0 +1,71 @@
+// Colors.
+@dark-grey: #262626;
+@light-blue: #BBD3F3;
+@light-grey: #d9d9d9;
+@hover-blue: #97B6EB;
+
+.rbchecklist-accountpage * { // For CSS reset.
+  padding: 0;
+  margin: 0;
+  border: 0;
+  font-family: inherit;
+}
+
+.rbchecklist-template-common() {
+  border-top: 1px solid @light-grey;
+  position: relative;
+  margin: 0 -1em;
+  padding: 8px 16px;
+
+  /* Templating of action input buttons. */
+  .rbchecklist-template-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 8px;
+  }
+}
+
+.rbchecklist-template {
+  .rbchecklist-template-common();
+
+  min-height: 24px;
+
+  .rbchecklist-template-title {
+    list-style-type: none;
+    font-weight: 600;
+    padding: 0.3em 0.6em;
+    margin: 1px 0;
+  }
+
+  li.rbchecklist-template-item {
+    list-style-type: none;
+    padding: 0.3em 0.6em 0.3em 2em;
+    margin: 1px 0;
+  }
+}
+
+.rbchecklist-template-edit {
+  .rbchecklist-template-common();
+
+  .rbchecklist-template-list {
+    input[type=text] {
+      width: 100% !important;
+      background-color: white;
+      margin: 1px 0;
+    }
+  }
+
+  .rbchecklist-template-edit-title {
+    font-weight: 600;
+    padding-right: 2em !important;
+  }
+
+  .rbchecklist-template-edit-item {
+    padding-left: 2em !important;
+  }
+}
+
+#rbchecklist-template-add-new {
+    margin-bottom: 8px;
+}

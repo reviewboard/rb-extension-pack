@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from djblets.webapi.resources import (register_resource_for_model,
                                       unregister_resource_for_model)
 from reviewboard.accounts.forms.pages import AccountPageForm
@@ -7,7 +9,8 @@ from reviewboard.extensions.hooks import (AccountPagesHook,
                                           TemplateHook)
 from reviewboard.urls import reviewable_url_names
 
-from checklist.resources import checklist_resource, checklist_template_resource
+from checklist.resources import (checklist_item_resource, checklist_resource,
+                                 checklist_template_resource)
 from checklist.models import ChecklistTemplate, ReviewChecklist
 
 
@@ -57,7 +60,8 @@ class Checklist(Extension):
         },
     }
 
-    resources = [checklist_resource, checklist_template_resource]
+    resources = [checklist_resource, checklist_item_resource,
+                 checklist_template_resource]
 
     def __init__(self, *args, **kwargs):
         super(Checklist, self).__init__(*args, **kwargs)

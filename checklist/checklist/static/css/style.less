@@ -132,7 +132,7 @@
         display: inline-block;
       }
 
-      input[name="checklist_edit_description"] {
+      input[name="checklist-edit-description"] {
         width: @item-width;
         margin: 0 auto;
         padding: 0 4px;
@@ -140,6 +140,10 @@
         height: @item-height;
         background-color: #eee;
         font-family: inherit;
+      }
+
+      input[name="checklist-checkbox"] {
+        margin-right: 10px;
       }
     }
   }
@@ -153,7 +157,7 @@
   background-color: white;
   border-top: 1px @box-border-color solid;
 
-  input[name="checklist_item_description"] {
+  input[name="checklist-add-item"] {
     width: 100%;
     margin: 0 auto;
     display: block;
@@ -161,8 +165,4 @@
     height: inherit;
     box-sizing: border-box;
   }
-}
-
-input[name="checklist_checkbox"] {
-  margin-right: 10px;
 }

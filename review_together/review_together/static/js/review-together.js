@@ -1,4 +1,4 @@
-var ReviewTogetherJS = {};
+window.ReviewTogetherJS = {};
 
 (function() {
     /*

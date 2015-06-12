@@ -1,5 +1,4 @@
-from setuptools import setup
-
+from reviewboard.extensions.packaging import setup
 
 PACKAGE = "review-together"
 VERSION = "1.0.0a"

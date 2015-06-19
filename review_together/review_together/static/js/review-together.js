@@ -1,4 +1,4 @@
-var ReviewTogetherJS = {};
+ReviewTogetherJS = {};
 
 (function() {
     /*
@@ -6,15 +6,18 @@ var ReviewTogetherJS = {};
      */
     ReviewTogetherJS.Extension = RB.Extension.extend({
         initialize: function () {
+            var settings,
+                together;
+
             _super(this).initialize.call(this);
 
-            var settings = this.get('settings');
+            settings = this.get('settings');
 
             if (settings.hub_url) {
                 TogetherJSConfig_hubBase = settings.hub_url.trim();
             }
 
-            var together = $('#launch-together');
+            together = $('#launch-together');
             if (together) {
                 together.click(function () {
                     TogetherJS(this);
@@ -32,11 +35,11 @@ var ReviewTogetherJS = {};
 
                     if (peer) {
                         peer_identityId = peer.id.split('.')[0];
-                        $('.togetherjs-peer-scroll-position[peerID="'
-                          + peer_identityId + '"]').remove();
+                        $('.togetherjs-peer-scroll-position[peerID="' +
+                          peer_identityId + '"]').remove();
                     }
                 });
-            })
+            });
 
             document.addEventListener('scroll', documentScroll);
         }
@@ -47,12 +50,15 @@ var ReviewTogetherJS = {};
      * position is updated.
      */
     function documentScroll() {
+        var scroll_position,
+            peer_object;
+
         if (!TogetherJS.running) {
             return;
         }
 
-        var scroll_position = $(document).scrollTop(),
-            peer_object = TogetherJS.require('peers').Self;
+        scroll_position = $(document).scrollTop();
+        peer_object = TogetherJS.require('peers').Self;
 
         TogetherJS.send({
             type: 'scroll',
@@ -66,12 +72,12 @@ var ReviewTogetherJS = {};
      * Event handler for when a peer sends you a scroll event.
      */
     TogetherJS.hub.on('scroll', function (peer_transmission) {
-        var peer_position = parseInt(peer_transmission.position, 10);
+        var peer_position = parseInt(peer_transmission.position, 10),
             peer_color = peer_transmission.color,
             peer_identityId = peer_transmission.identityId,
             scroll_position_bar =
-                $('.togetherjs-peer-scroll-position[peerID="'
-                  + peer_identityId + '"]');
+                $('.togetherjs-peer-scroll-position[peerID="' +
+                  peer_identityId + '"]');
 
         // Create the scroll position if it has not already been created.
         if (!scroll_position_bar.length) {

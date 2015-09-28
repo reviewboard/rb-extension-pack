@@ -19,7 +19,7 @@ To install Review Stopwatch, just run this command (as root):
 
     easy_install rbstopwatch
 
-Once done, log in to Review Board's administrator interface and select
+Once done, log in to Review Board's administration interface and select
 "Extensions" at the top of the page. If you don't see the "Review Stopwatch"
 extension, click "Scan for installed extensions". Click "Enable" on the
 extension, and everything should be set up.

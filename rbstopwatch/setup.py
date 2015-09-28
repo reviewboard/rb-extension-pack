@@ -2,13 +2,15 @@ from __future__ import unicode_literals
 
 from reviewboard.extensions.packaging import setup
 
+from rbstopwatch import get_package_version
+
 
 PACKAGE = "rbstopwatch"
-VERSION = "0.1"
+
 
 setup(
     name=PACKAGE,
-    version=VERSION,
+    version=get_package_version(),
     description='Stopwatch extension for Review Board',
     author='Beanbag, Inc. <support@beanbaginc.com>',
     packages=['rbstopwatch'],

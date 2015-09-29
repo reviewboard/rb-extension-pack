@@ -14,7 +14,7 @@ setup(
     author_email='support@beanbaginc.com',
     maintainer='Beanbag, Inc.',
     maintainer_email='support@beanbaginc.com',
-    packages=['rbstopwatch'],
+    packages=[b'rbstopwatch'],
     entry_points={
         'reviewboard.extensions': [
             'rbstopwatch = rbstopwatch.extension:StopwatchExtension',

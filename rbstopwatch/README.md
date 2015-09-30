@@ -42,5 +42,5 @@ starting them each time you navigate to a different page.
 
 The total time spent on each review can be seen in the review box just above
 the comments, and is also available in the API (the
-``extra_data.rbstopwatch.reviewTime`` key in the review resource contains the
+`extra_data.rbstopwatch.reviewTime` key in the review resource contains the
 total number of seconds spent on the review).

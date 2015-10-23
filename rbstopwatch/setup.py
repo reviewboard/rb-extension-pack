@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from setuptools import find_packages
 from reviewboard.extensions.packaging import setup
 
 from rbstopwatch import get_package_version
@@ -14,16 +15,10 @@ setup(
     author_email='support@beanbaginc.com',
     maintainer='Beanbag, Inc.',
     maintainer_email='support@beanbaginc.com',
-    packages=[b'rbstopwatch'],
+    packages=find_packages(),
     entry_points={
         'reviewboard.extensions': [
             'rbstopwatch = rbstopwatch.extension:StopwatchExtension',
-        ],
-    },
-    package_data={
-        b'rbstopwatch': [
-            'templates/rbstopwatch/*.txt',
-            'templates/rbstopwatch/*.html',
         ],
     },
     classifiers=[

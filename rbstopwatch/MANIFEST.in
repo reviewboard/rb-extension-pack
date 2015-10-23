@@ -1,0 +1,1 @@
+recursive-include rbstopwatch/templates *.html

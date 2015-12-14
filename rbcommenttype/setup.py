@@ -22,8 +22,8 @@ setup(
     },
     package_data={
         b'rbcommenttype': [
-            'templates/rbcommenttype/*.html',
-            'templates/rbcommenttype/*.txt',
+            'templates/*.html',
+            'templates/*.txt',
         ],
     },
     classifiers=[

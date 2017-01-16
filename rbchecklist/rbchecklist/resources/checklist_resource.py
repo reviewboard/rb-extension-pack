@@ -6,8 +6,8 @@ from reviewboard.webapi.base import WebAPIResource
 from reviewboard.webapi.decorators import webapi_check_local_site
 from reviewboard.webapi.resources import resources
 
-from checklist.models import ReviewChecklist
-from checklist.resources import checklist_item_resource
+from rbchecklist.models import ReviewChecklist
+from rbchecklist.resources import checklist_item_resource
 
 
 class ChecklistResource(WebAPIResource):

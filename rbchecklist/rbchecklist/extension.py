@@ -9,9 +9,10 @@ from reviewboard.extensions.hooks import (AccountPagesHook,
                                           TemplateHook)
 from reviewboard.urls import reviewable_url_names
 
-from checklist.resources import (checklist_item_resource, checklist_resource,
-                                 checklist_template_resource)
-from checklist.models import ChecklistTemplate, ReviewChecklist
+from rbchecklist.resources import (checklist_item_resource,
+                                   checklist_resource,
+                                   checklist_template_resource)
+from rbchecklist.models import ChecklistTemplate, ReviewChecklist
 
 
 class ChecklistAccountPageForm(AccountPageForm):

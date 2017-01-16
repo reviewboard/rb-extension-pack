@@ -8,7 +8,7 @@ from djblets.webapi.errors import DOES_NOT_EXIST
 from reviewboard.webapi.base import WebAPIResource
 from reviewboard.webapi.decorators import webapi_check_local_site
 
-from checklist.models import ReviewChecklist as Checklist
+from rbchecklist.models import ReviewChecklist as Checklist
 
 
 class ChecklistItemResource(WebAPIResource):

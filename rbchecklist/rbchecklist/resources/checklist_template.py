@@ -6,7 +6,7 @@ from reviewboard.webapi.decorators import (webapi_check_local_site,
                                            webapi_login_required,
                                            webapi_response_errors)
 
-from checklist.models import ChecklistTemplate
+from rbchecklist.models import ChecklistTemplate
 
 
 class ChecklistTemplateResource(WebAPIResource):

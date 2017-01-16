@@ -6,7 +6,7 @@
  */
 Checklist = {
     apiPath: SITE_ROOT +
-             'api/extensions/checklist.extension.Checklist/checklists/'
+             'api/extensions/rbchecklist.extension.Checklist/checklists/'
 };
 
 

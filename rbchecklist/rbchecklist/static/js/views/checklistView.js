@@ -125,6 +125,9 @@ Checklist.ChecklistItemView = Backbone.View.extend({
  * The main checklist view, including header and new item input field.
  */
 Checklist.ChecklistView = Backbone.View.extend({
+    id: 'checklist',
+    className: 'checklist',
+
     events: {
         'keydown input[name="checklist-add-item"]': 'addItem',
         'click div#checklist-toggle-size': 'toggleViewSize'
@@ -152,16 +155,10 @@ Checklist.ChecklistView = Backbone.View.extend({
         this.collection = new Checklist.ChecklistItemCollection();
         this.listenTo(this.collection, 'add', this._addItemToView);
 
-        this._getOrCreateChecklist(options.review_request_id);
-    },
-
-    /* Get or create a checklist on the server via POST request. */
-    _getOrCreateChecklist: function(reviewRequestId) {
-        this.checklist = new Checklist.Checklist({});
-
+        this.checklist = new Checklist.Checklist();
         this.checklist.save({
             data: {
-                review_request_id: reviewRequestId
+                review_request_id: options.reviewRequestID
             },
             success: _.bind(function(model, response) {
                 // Ready the collection of checklist items.
@@ -176,7 +173,6 @@ Checklist.ChecklistView = Backbone.View.extend({
     /* Render the checklist on the page. */
     render: function() {
         this.$el.html(this.checklistTemplate());
-        $('#checklist').empty().append(this.$el);
         this._$list = this.$el.find('ul.checklist-items');
     },
 

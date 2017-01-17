@@ -19,11 +19,5 @@ setup(
     entry_points={
         'reviewboard.extensions':
             'rbchecklist = rbchecklist.extension:Checklist',
-    },
-    package_data={
-        'rbchecklist': [
-            'templates/checklist/*.txt',
-            'templates/checklist/*.html',
-        ],
     }
 )

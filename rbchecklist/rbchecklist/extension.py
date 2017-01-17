@@ -19,7 +19,7 @@ class ChecklistAccountPageForm(AccountPageForm):
     form_title = 'Manage Checklist Templates'
     save_label = None
 
-    js_view_class = 'RB.ChecklistAccountPageView'
+    js_view_class = 'Checklist.AccountPageView'
 
 
 class ChecklistAccountPage(AccountPage):
@@ -50,16 +50,16 @@ class Checklist(Extension):
         'checklist': {
             'source_filenames': [
                 'js/checklist.es6.js',
-                'js/models/checklist.js',
-                'js/views/checklistView.js',
+                'js/models/checklistModel.es6.js',
+                'js/views/checklistView.es6.js',
             ],
             'apply_to': review_request_url_names,
         },
         'accountpage': {
             'source_filenames': [
-                'js/models/checklist.js',
-                'js/models/checklistTemplate.js',
-                'js/views/checklistAccountPageView.js',
+                'js/models/checklistModel.es6.js',
+                'js/models/checklistTemplateModel.es6.js',
+                'js/views/checklistAccountPageView.es6.js',
             ],
             'apply_to': 'user-preferences',
         },

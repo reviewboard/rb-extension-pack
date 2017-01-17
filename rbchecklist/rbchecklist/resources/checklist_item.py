@@ -72,6 +72,10 @@ class ChecklistItemResource(WebAPIResource):
                 'type': six.text_type,
                 'description': 'The description of the checklist item.',
             },
+            'checked': {
+                'type': bool,
+                'description': 'Whether the item is checked.',
+            },
         }
     )
     @webapi_login_required

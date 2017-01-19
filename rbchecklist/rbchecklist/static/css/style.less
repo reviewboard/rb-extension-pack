@@ -1,34 +1,26 @@
 @import (reference) "@{STATIC_ROOT}rb/css/defs.less";
 
-// Sizes.
-@body-height: 256px; // Height of list and new item input.
+@items-height: 256px;
+@body-height: @items-height + @input-field-height + 1px;
+@checklist-width: 256px;
 @input-field-height: 24px;
 @item-height: 20px;
-@item-width: 176px;
+@item-padding: 4px;
 
-.checklist * { // For CSS reset.
-  padding: 0;
-  margin: 0;
-  border: 0;
-  font-family: inherit;
-}
-
-#checklist {
-  .checklist-box {
-    border: 1px @box-border-color solid;
-    border-radius: 6px 6px 0 0;
-    width: 256px;
-    overflow: hidden;
-    position: fixed;
-    right: 15px;
-    bottom: 0;
-
-    .box-shadow(@box-shadow);
-  }
-
-  li {
-    display: list-item;
-  }
+.checklist {
+  border-color: @box-border-color;
+  border-radius: 6px 6px 0 0;
+  border-style: solid;
+  border-width: 1px 1px 0 1px;
+  bottom: 0;
+  box-shadow: @box-shadow;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  right: 1em;
+  width: 256px;
+  z-index: @z-index-dialog;
 
   a {
     color: black;
@@ -36,133 +28,122 @@
   }
 }
 
-.checklist-header {
-  background: #97B6EB;
-  border-bottom: 1px @box-border-color solid;
-  border-radius: 5px 5px 0 0;
-  padding: 0 4px;
-  position: relative;
-  z-index: 10;
-  > div {
-    display: inline-block;
-  }
-}
-
-#checklist-toggle-size {
-  position: absolute;
-  top: 4px;
-  right: 8px;
-  cursor: pointer;
-}
-
-.checklist-title {
-  padding: 4px;
-  font-size: 10pt;
-}
-.checklist-title:before {
-  content: "✔ "
-}
-
-#checklist-body {
-  background: @light-blue;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-  z-index: 9;
-  height: @body-height;
+.checklist-body {
+  background-color: @light-blue;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   margin-bottom: 0;
-  transition: all 0.5s ease-out;
+  transition: all 0.3s ease-out;
 
   &.hidden {
     margin-bottom: -@body-height;
   }
+}
 
-  ul.checklist-items {
-    padding-left: 0;
-    list-style: none;
-    margin: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    bottom: @input-field-height;
+.checklist-items {
+  padding: 0;
+  height: @items-height;
+  list-style: none;
+  margin: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 
-    li {
-      border-bottom: 1px @box-border-color solid;
-      min-height: @item-height;
-      padding: 4px;
-      white-space: normal;
-      overflow-wrap: break-word;
-      word-wrap: break-word; // Same as overflow-wrap.
+.checklist-item {
+  border-bottom: 1px @box-border-color solid;
+  display: flex;
+  line-height: @item-height;
+  min-height: @item-height;
+  position: relative;
+  padding: @item-padding;
+  vertical-align: baseline;
+  white-space: normal;
 
-      div {
-        display: inline-block;
-        max-width: 80%;
-        vertical-align: middle;
-      }
+  &.checked .checklist-item-description {
+    color: #888888;
+  }
 
-      .checklist-item-desc {
-        max-width: @item-width;
-      }
+  .fa {
+    font-size: 14px;
+    padding-left: 6px;
+  }
 
-      .checklist-item-checkbox {
-        vertical-align: top;
-        line-height: @item-height;
-      }
+  .checklist-item-edit-accept,
+  .checklist-item-edit-cancel {
+    display: none;
+  }
 
-      .checklist-item-delete {
-        margin-top: -4px;
-      }
+  .checklist-item-edit,
+  .checklist-item-delete {
+    display: inline;
+  }
 
-      .rb-icon {
-        cursor: pointer;
-      }
+  &.editing {
+    background-color: white;
 
-      .checklist-item-actions {
-        position: absolute;
-        right: 0;
-        display: none;
+    .checklist-item-edit-accept,
+    .checklist-item-edit-cancel {
+      display: inline;
+    }
 
-        div {
-          margin-right: 2px;
-        }
-      }
-      &:hover .checklist-item-actions {
-        display: inline-block;
-      }
-
-      input[name="checklist-edit-description"] {
-        width: @item-width;
-        margin: 0 auto;
-        padding: 0 4px;
-        box-sizing: border-box;
-        height: @item-height;
-        background-color: #eee;
-        font-family: inherit;
-      }
-
-      input[name="checklist-checkbox"] {
-        margin-right: 10px;
-      }
+    .checklist-item-edit,
+    .checklist-item-delete {
+      display: none;
     }
   }
 }
 
+.checklist-item-actions {
+  float: right;
+  visibility: hidden;
+
+  .checklist-item:hover &,
+  .checklist-item.editing & {
+    visibility: visible;
+  }
+
+  span {
+    cursor: pointer;
+  }
+}
+
+.checklist-header {
+  background: #97B6EB;
+  border-bottom: 1px @box-border-color solid;
+  border-radius: 5px 5px 0 0;
+  padding: @item-padding (@item-padding * 2);
+  position: relative;
+}
+
+.checklist-title {
+  font-size: 14px;
+  line-height: 14px;
+}
+
+.checklist-toggle-size {
+  float: right;
+  cursor: pointer;
+}
+
 .checklist-field {
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-  height: @input-field-height;
-  background-color: white;
   border-top: 1px @box-border-color solid;
 
   input[name="checklist-add-item"] {
-    width: 100%;
-    margin: 0 auto;
-    display: block;
-    padding: 0 4px;
-    height: inherit;
+    border: 0;
     box-sizing: border-box;
+    height: @input-field-height;
+    padding: 0 @item-padding;
+    width: 100%;
   }
+}
+
+.checklist-checkbox-container {
+  vertical-align: top;
+}
+
+.checklist-description-container {
+  flex-grow: 1;
+  overflow-wrap: break-word;
+  padding-left: @item-padding;
 }

@@ -10,44 +10,30 @@ Checklist.ChecklistItemView = Backbone.View.extend({
 
     events: {
         'click input[name="checklist-checkbox"]': '_onToggleClicked',
-        'click div.checklist-item-edit': '_onEditClicked',
-        'keyup input[name="checklist-edit-description"]': '_onItemEditorChanged',
-        'click div.checklist-item-edit-cancel': '_onCancelEditClicked',
-        'click div.checklist-item-delete': '_onRemoveClicked',
+        'click .checklist-item-description': '_startEdit',
+        'click .checklist-item-edit': '_startEdit',
+        'click .checklist-item-edit-accept': '_confirmEdit',
+        'click .checklist-item-edit-cancel': '_cancelEdit',
+        'click .checklist-item-delete': '_onRemoveClicked',
+        'keydown .checklist-item-description': '_onEditKeyDown',
     },
 
     /**
      * The template for items in their default state.
      */
     template: _.template(dedent`
-        <div class="checklist-item-checkbox">
+        <div class="checklist-checkbox-container">
          <input type="checkbox" name="checklist-checkbox"
-                <% if (checked) { %> checked="checked" <% } %> >
+                <% if (checked) { %> checked <% } %> >
         </div>
-        <div class="checklist-item-desc">
-         <%- description %>
-        </div>
-        <div class="checklist-item-actions">
-         <div class="checklist-item-edit">
-          <span class="rb-icon rb-icon-edit"></span>
+        <div class="checklist-description-container">
+         <div class="checklist-item-actions">
+          <span class="fa fa-pencil checklist-item-edit"></span>
+          <span class="fa fa-trash-o checklist-item-delete"></span>
+          <span class="fa fa-check checklist-item-edit-accept"></span>
+          <span class="fa fa-close checklist-item-edit-cancel"></span>
          </div>
-         <div class="checklist-item-delete">
-          <span class="rb-icon rb-icon-delete"></span>
-         </div>
-        </div>
-    `),
-
-    /**
-     * The view template when editing an item.
-     */
-    edit_template: _.template(dedent`
-        <input type="checkbox" name="checklist-checkbox"
-               <% if (checked) { %> checked="checked" <% } %> >
-        <input name="checklist-edit-description" value="<%- description %>">
-        <div class="checklist-item-actions">
-         <div class="checklist-item-edit-cancel">
-          <span class="rb-icon rb-icon-delete"></span>
-         </div>
+         <span class="checklist-item-description"><%- description %></span>
         </div>
     `),
 
@@ -69,39 +55,33 @@ Checklist.ChecklistItemView = Backbone.View.extend({
      *     This object, for chaining.
      */
     render() {
-        this.$el.html(this.template(this.model.attributes));
+        this.$el
+            .html(this.template(this.model.attributes))
+            .toggleClass('checked', this.model.get('checked'));
+
         return this;
     },
 
     /**
      * Toggle the status of the checklist item.
-     *
-     * Args:
-     *     ev (Event):
-     *         The event that triggered the action.
      */
-    _onToggleClicked(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-
+    _onToggleClicked() {
         this.model.toggle();
+        this.$el.toggleClass('checked', this.model.get('checked'));
     },
 
     /**
      * Switch the item into edit mode.
-     *
-     * Args:
-     *     ev (Event):
-     *         The event that triggered the action.
      */
-    _onEditClicked(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
+    _startEdit() {
+        if (!this.$el.hasClass('editing')) {
+            this.$el.toggleClass('editing');
 
-        this.$el
-            .html(this.edit_template(this.model.attributes))
-            .children('input[name=checklist-edit-description]')
+            this.$('.checklist-item-description')
+                .prop('contenteditable', true)
+                .focus()
                 .select();
+        }
     },
 
     /**
@@ -114,41 +94,64 @@ Checklist.ChecklistItemView = Backbone.View.extend({
      *     ev (Event):
      *         The event that triggered the action.
      */
-    _onItemEditorChanged(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-
+    _onEditKeyDown(ev) {
         if (ev.keyCode === $.ui.keyCode.ENTER || ev.keyCode === 13) {
-            const $input = this.$('input[name=checklist-edit-description]');
-            const description = $input.val().trim();
+            // Enter confirms the edit.
+            ev.preventDefault();
+            ev.stopPropagation();
 
-            if (description !== '') {
-                this.model.updateDescription(description);
-            }
-        } else if (ev.keyCode === $.ui.keyCode.ESCAPE ||
-                   ev.keyCode === 27) {
-            this._onCancelEditClicked();
+            this._confirmEdit();
+        } else if (ev.keyCode === $.ui.keyCode.ESCAPE || ev.keyCode === 27) {
+            // Escape cancels the edit.
+            ev.preventDefault();
+            ev.stopPropagation();
+
+            this._cancelEdit();
+        } else if (ev.altKey || ev.ctrlKey || ev.metaKey) {
+            /*
+             * Prevent any kind of special modifiers (such
+             * bolding or italicizing).
+             */
+            ev.preventDefault();
+            ev.stopPropagation();
         }
     },
 
     /**
-     * Cancel the edit operation.
+     * Accept the edited text.
      */
-    _onCancelEditClicked() {
-        this.$el.html(this.template(this.model.attributes));
+    _confirmEdit() {
+        const description = this.$('.checklist-item-description').text().trim();
+
+        if (description !== '') {
+            this.model.updateDescription(description);
+            this._endEdit();
+        }
+    },
+
+    /**
+     * Cancel the edit.
+     */
+    _cancelEdit() {
+        this._endEdit();
+
+        this.$('.checklist-item-description')
+            .text(this.model.get('description'));
+    },
+
+    /**
+     * Finish the edit operation.
+     */
+    _endEdit() {
+        this.$el.toggleClass('editing');
+        this.$('.checklist-item-description')
+            .prop('contenteditable', false);
     },
 
     /**
      * Delete the item.
-     *
-     * Args:
-     *     ev (Event):
-     *         The event that triggered the action.
      */
-    _onRemoveClicked(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-
+    _onRemoveClicked() {
         this.model.remove();
     },
 });
@@ -158,28 +161,22 @@ Checklist.ChecklistItemView = Backbone.View.extend({
  * The main checklist view, including header and new item input field.
  */
 Checklist.ChecklistView = Backbone.View.extend({
-    id: 'checklist',
     className: 'checklist',
 
     events: {
         'keyup input[name="checklist-add-item"]': '_onAddItemKeyUp',
-        'click div#checklist-toggle-size': '_toggleExpand',
+        'click .checklist-toggle-size': '_toggleExpand',
     },
 
     checklistTemplate: _.template(dedent`
-        <div class="checklist-box">
-         <div class="checklist-header">
-          <div class="checklist-title">Checklist</div>
-          <div id="checklist-toggle-size">
-           <div class="rb-icon rb-icon-collapse"></div>
-          </div>
-         </div>
-         <div id="checklist-body">
-          <ul class="checklist-items"></ul>
-          <div class="checklist-field">
-           <input name="checklist-add-item"
-                  placeholder="Add a new item"/>
-          </div>
+        <div class="checklist-header">
+         <span class="checklist-title">✔ Checklist</span>
+         <span class="rb-icon rb-icon-collapse checklist-toggle-size"></span>
+        </div>
+        <div class="checklist-body">
+         <ul class="checklist-items"></ul>
+         <div class="checklist-field">
+          <input name="checklist-add-item" placeholder="Add a new item">
          </div>
         </div>
     `),
@@ -271,7 +268,7 @@ Checklist.ChecklistView = Backbone.View.extend({
      * Toggle the checklist open or closed.
      */
     _toggleExpand() {
-        this.$('#checklist-body').toggleClass('hidden');
+        this.$('.checklist-body').toggleClass('hidden');
         this.$('#checklist-toggle-size div')
             .toggleClass('rb-icon-expand')
             .toggleClass('rb-icon-collapse');

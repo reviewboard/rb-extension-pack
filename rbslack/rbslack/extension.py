@@ -21,8 +21,8 @@ class SlackExtension(Extension):
     """An extension to integrate Review Board with slack.com"""
     metadata = {
         'Name': 'Slack Integration',
-        'Summary': 'Notifies channels on Slack.com for any review '
-                   'request activity.',
+        'Summary': 'Notifies channels and users (requires usernames to match)'
+                   'on Slack.com for any review request activity.',
     }
 
     is_configurable = True
@@ -46,7 +46,7 @@ class SlackExtension(Extension):
         for signal, handler in hooks:
             SignalHook(self, signal, handler)
 
-    def notify(self, text, fields):
+    def notify(self, text, fields, channel=self.settings['channel']):
         """Send a webhook notification to Slack."""
         payload = {
             'username': self.settings['notify_username'],
@@ -60,14 +60,14 @@ class SlackExtension(Extension):
             ],
         }
 
-        channel = self.settings['channel']
+        payload['channel'] = channel
 
-        if channel:
-            payload['channel'] = channel
+        logging.info('Notifying channel: {}'.format(channel))
 
         try:
             urlopen(Request(self.settings['webhook_url'],
-                            json.dumps(payload)))
+                            json.dumps(payload),
+                            headers={'Content-type': 'application/json'}))
         except Exception as e:
             logging.error('Failed to send notification to slack.com: %s',
                           e, exc_info=True)
@@ -157,7 +157,7 @@ class SlackExtension(Extension):
         logging.debug('Notifying slack.com for event review_request_closed: '
                       'review_request pk=%d',
                       review_request.pk)
-        self.notify(text, fields)
+        self.notify_all(text, fields, review_request)
 
     def on_review_request_published(self, user, review_request, changedesc,
                                     **kwargs):
@@ -181,7 +181,7 @@ class SlackExtension(Extension):
         logging.debug('Notifying slack.com for event '
                       'review_request_published: review_request pk=%d',
                       review_request.pk)
-        self.notify(text, fields)
+        self.notify_all(text, fields, review_request)
 
     def on_review_request_reopened(self, user, review_request, **kwargs):
         """Handler for the review_request_reopened signal."""
@@ -207,7 +207,7 @@ class SlackExtension(Extension):
         logging.debug('Notifying slack.com for event review_request_reopened: '
                       'review_request pk=%d',
                       review_request.pk)
-        self.notify(text, fields)
+        self.notify_all(text, fields, review_request)
 
     def notify_review(self, user, review, title, extra_fields=[],
                       extra_text=''):
@@ -230,7 +230,7 @@ class SlackExtension(Extension):
 
         text = '%s: %s%s' % (title, review_request_link, extra_text)
 
-        self.notify(text, fields)
+        self.notify_all(text, fields, review_request)
 
     def on_review_published(self, user, review, **kwargs):
         """Handler for the review_published signal."""
@@ -289,3 +289,22 @@ class SlackExtension(Extension):
                       'review pk=%d',
                       reply.pk)
         self.notify_review(user, reply, 'Reply Published')
+
+    def notify_all(self, text, fields, review_request):
+        """Notify all people and groups associated with the review
+           This assumes the usernames in Slack and ReviewBoard match
+        """
+        self.notify(text, fields)
+
+        notify_list = [review_request.submitter.username, ]
+
+        for user in set(review_request.get_participants()):
+            notify_list.append(user.username)
+
+        for group in review_request.target_groups.all():
+            for user in group.users.all():
+                notify_list.append(user.username)
+
+        for username in set(notify_list):
+            self.notify(text, fields, '@{username}'.format(
+                username=username))

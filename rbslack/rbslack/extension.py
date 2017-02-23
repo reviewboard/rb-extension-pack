@@ -46,7 +46,7 @@ class SlackExtension(Extension):
         for signal, handler in hooks:
             SignalHook(self, signal, handler)
 
-    def notify(self, text, fields, channel=None):
+    def notify(self, text, fields, channel=self.settings['channel']):
         """Send a webhook notification to Slack."""
         payload = {
             'username': self.settings['notify_username'],
@@ -59,9 +59,6 @@ class SlackExtension(Extension):
                 },
             ],
         }
-
-        if not channel:
-            channel = self.settings['channel']
 
         payload['channel'] = channel
 

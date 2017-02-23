@@ -21,8 +21,8 @@ class SlackExtension(Extension):
     """An extension to integrate Review Board with slack.com"""
     metadata = {
         'Name': 'Slack Integration',
-        'Summary': 'Notifies channels on Slack.com for any review '
-                   'request activity.',
+        'Summary': 'Notifies channels and users (requires usernames to match)'
+                   'on Slack.com for any review request activity.',
     }
 
     is_configurable = True

@@ -151,6 +151,7 @@ RBSeverity.ReviewDialogCommentHookView = Backbone.View.extend({
      */
     _onSeverityChanged: function() {
         this.model.get('extraData').severity = this._$select.val();
+        this.model.save();
     }
 });
 

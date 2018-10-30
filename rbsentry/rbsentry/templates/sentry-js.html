@@ -1,0 +1,7 @@
+<script src="https://browser.sentry-cdn.com/4.2.3/bundle.min.js" crossorigin="anonymous"></script>
+<script>
+    Sentry.init({
+        dsn: '{{settings.SENTRY.DSN}}',
+        environment: '{{settings.SENTRY.environment|escapejs}}',
+    });
+</script>

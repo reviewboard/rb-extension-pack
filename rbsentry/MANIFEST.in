@@ -1,0 +1,9 @@
+graft rbsentry/rbsentry/templates
+graft rbsentry/rbsentry/static
+
+include COPYING
+include INSTALL
+include README.md
+include *-requirements.txt
+
+global-exclude .*.sw[op] *.py[co] __pycache__ .DS_Store .noseids

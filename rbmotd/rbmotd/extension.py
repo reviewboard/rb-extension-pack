@@ -1,13 +1,38 @@
+"""Message of the day extension for Review Board."""
+
+from __future__ import unicode_literals
+
 from reviewboard.extensions.base import Extension
 from reviewboard.extensions.hooks import TemplateHook
 
 
 class MotdTemplateHook(TemplateHook):
+    """Template hook to inject the motd."""
+
     def __init__(self, extension):
+        """Initialize the hook.
+
+        Args:
+            extension (MotdExtension):
+                The extension that owns the hook.
+        """
         super(MotdTemplateHook, self).__init__(extension, 'base-after-navbar',
                                                'rbmotd/motd.html')
 
     def render_to_string(self, request, context):
+        """Render the data for the hook location.
+
+        Args:
+            request (django.http.HttpRequest):
+                The request object.
+
+            context (dict):
+                The template render context.
+
+        Returns:
+            django.utils.safestring.SafeText:
+            The rendered HTML.
+        """
         ext_settings = self.extension.settings
 
         context.update({
@@ -50,4 +75,5 @@ class MotdExtension(Extension):
     is_configurable = True
 
     def initialize(self):
+        """Initialize the extension."""
         MotdTemplateHook(self)

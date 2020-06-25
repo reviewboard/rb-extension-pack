@@ -1,3 +1,6 @@
+"""Version definitions for rbslack."""
+
+
 from __future__ import unicode_literals
 
 
@@ -12,6 +15,12 @@ VERSION = (0, 1, 0, 0, 'final', 0, True)
 
 
 def get_version_string():
+    """Return the version as a user-visible string.
+
+    Returns:
+        unicode:
+        The current version.
+    """
     version = '%s.%s' % (VERSION[0], VERSION[1])
 
     if VERSION[2] or VERSION[3]:
@@ -33,6 +42,12 @@ def get_version_string():
 
 
 def get_package_version():
+    """Return the version for the package.
+
+    Returns:
+        unicode:
+        The current version.
+    """
     version = '%s.%s' % (VERSION[0], VERSION[1])
 
     if VERSION[2] or VERSION[3]:
@@ -48,6 +63,12 @@ def get_package_version():
 
 
 def is_release():
+    """Return whether this is a release or not.
+
+    Returns:
+        bool:
+        True if the current version is an official release.
+    """
     return VERSION[6]
 
 

@@ -9,7 +9,10 @@ PACKAGE = 'rbslack'
 setup(
     name=PACKAGE,
     version=get_package_version(),
-    description='Review Board integration for slack.com',
+    description=(
+        'Review Board integration for slack.com. DEPRECATED: this extension '
+        'will be removed soon. Please switch to the Slack integration'
+    ),
     url='https://www.beanbaginc.com',
     author='Beanbag, Inc.',
     author_email='support@beanbaginc.com',

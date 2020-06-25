@@ -1,3 +1,5 @@
+"""Forms definitions for the rbslack extension."""
+
 from __future__ import unicode_literals
 
 from django import forms
@@ -6,6 +8,8 @@ from djblets.extensions.forms import SettingsForm
 
 
 class SlackSettingsForm(SettingsForm):
+    """The settings form for the rbslack extension."""
+
     webhook_url = forms.URLField(
         label=_('Webhook URL'),
         help_text=_('Your unique Slack webhook URL. This can be found in the '

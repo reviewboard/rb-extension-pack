@@ -1,5 +1,8 @@
-from django.contrib import admin
+"""Admin site definitions for the rbwebhooks extension."""
 
+from __future__ import unicode_literals
+
+from django.contrib import admin
 from reviewboard.extensions.base import get_extension_manager
 
 from rbwebhooks.extension import RBWebHooksExtension
@@ -7,6 +10,8 @@ from rbwebhooks.models import WebHookTarget
 
 
 class WebHookTargetAdmin(admin.ModelAdmin):
+    """Admin page for the WebHookTarget model."""
+
     fields = ['hook_id', 'url', 'description', 'enabled']
     list_display = ('hook_id', 'url', 'enabled')
     list_filter = ('enabled', 'hook_id')

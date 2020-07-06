@@ -9,7 +9,7 @@ from pwd import getpwnam
 
 from django.conf import settings
 from django.core.management import execute_from_command_line
-from django.core.management.base import CommandError, NoArgsCommand
+from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 from djblets.siteconfig.models import SiteConfiguration
 from reviewboard.changedescs.models import ChangeDescription
@@ -19,10 +19,10 @@ from reviewboard.reviews.models import (Comment, FileAttachmentComment,
 from reviewboard.scmtools.models import Tool
 
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
     help = 'Resets the state of the demo server.'
 
-    def handle_noargs(self, **options):
+    def handle(self, **options):
         demo_fixtures = getattr(settings, 'DEMO_FIXTURES', None)
         demo_upload_path = getattr(settings, 'DEMO_UPLOAD_PATH', None)
         demo_upload_owner = getattr(settings, 'DEMO_UPLOAD_PATH_OWNER', None)
@@ -86,8 +86,7 @@ class Command(NoArgsCommand):
         siteconfig = SiteConfiguration.objects.get_current()
 
         # Reset the state of the database.
-        execute_from_command_line([cmd, 'flush', '--noinput',
-                                   '--no-initial-data'])
+        execute_from_command_line([cmd, 'flush', '--noinput'])
         Tool.objects.all().delete()
 
         # Now load in the new fixtures.
@@ -127,9 +126,9 @@ class Command(NoArgsCommand):
             for path in dirs:
                 full_path = os.path.join(root, path)
                 os.chown(full_path, uid, gid)
-                os.chmod(full_path, 0755)
+                os.chmod(full_path, 0o755)
 
             for path in files:
                 full_path = os.path.join(root, path)
                 os.chown(full_path, uid, gid)
-                os.chmod(full_path, 0644)
+                os.chmod(full_path, 0o644)

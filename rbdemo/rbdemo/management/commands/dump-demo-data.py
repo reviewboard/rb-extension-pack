@@ -4,11 +4,11 @@ import sys
 
 from django.contrib.auth.models import User
 from django.core.management import execute_from_command_line
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 from djblets.extensions.models import RegisteredExtension
 
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
     help = 'Dumps the contents of the demo server for use in resets.'
 
     EXCLUDE_APPS = [
@@ -18,7 +18,7 @@ class Command(NoArgsCommand):
         'contenttypes',
         'django_evolution',
         'sessions',
-        'siteconfig',
+        'djblets_siteconfig',
     ]
 
     ALLOWED_EXTENSIONS = [
@@ -27,7 +27,7 @@ class Command(NoArgsCommand):
         'rbpowerpack.extension.PowerPackExtension',
     ]
 
-    def handle_noargs(self, **options):
+    def handle(self, **options):
         # Clean up anything in the database that we don't want.
         User.objects.filter(username__startswith='guest').delete()
         RegisteredExtension.objects.exclude(

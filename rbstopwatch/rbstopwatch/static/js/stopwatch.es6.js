@@ -1,17 +1,23 @@
-RBStopwatch = {};
+window.RBStopwatch = {};
 
 
-/*
- * A helper function to format a number of seconds into a string showing the
- * amount of elapsed time.
+/**
+ * Format a number of seconds into a string showing the amount of elapsed time.
+ *
+ * Args:
+ *     totalSeconds (number):
+ *         The elapsed number of seconds.
+ *
+ * Returns:
+ *     string:
+ *     The formatted string.
  */
 RBStopwatch.formatTimeString = function(totalSeconds) {
-    var hours = Math.floor(totalSeconds / 3600).toFixed(0),
-        minutes = Math.floor((totalSeconds % 3600) / 60).toFixed(0),
-        seconds = Math.floor(totalSeconds % 60).toFixed(0),
-        display;
+    const hours = Math.floor(totalSeconds / 3600).toFixed(0);
+    const minutes = Math.floor((totalSeconds % 3600) / 60).toFixed(0);
+    const seconds = Math.floor(totalSeconds % 60).toFixed(0);
 
-    display = (hours < 10) ? '0' + hours : hours;
+    let display = (hours < 10) ? '0' + hours : hours;
     display += ':';
     display += (minutes < 10) ? '0' + minutes : minutes;
     display += ':';
@@ -21,7 +27,7 @@ RBStopwatch.formatTimeString = function(totalSeconds) {
 };
 
 
-/*
+/**
  * The stopwatch model.
  *
  * This includes the timer machinery and serialization into the pending review.
@@ -30,27 +36,29 @@ RBStopwatch.Stopwatch = Backbone.Model.extend({
     defaults: {
         pendingReview: null,
         timerOn: false,
-        totalSec: 0
+        totalSec: 0,
     },
 
-    /*
+    /**
      * Initialize the model.
+     *
+     * Args:
+     *     attrs (object):
+     *         Attribute values for the model.
      */
-    initialize: function(attributes) {
-        var extraData,
-            currentTime,
-            pendingReview = attributes.pendingReview;
-
+    initialize(attrs) {
         _.bindAll(this, 'toggle', '_onReviewDone', '_onTick');
 
-        _super(this).initialize.apply(this, arguments);
+        Backbone.Model.prototype.initialize.apply(this, arguments);
 
         this._startTime = null;
         this._timerHandle = null;
 
+        const pendingReview = attrs.pendingReview;
         console.assert(pendingReview);
-        extraData = pendingReview.get('extraData') || {};
-        currentTime = parseInt(extraData['rbstopwatch.reviewTime'], 10) || 0;
+
+        const extraData = pendingReview.get('extraData') || {};
+        const currentTime = parseInt(extraData['rbstopwatch.reviewTime'], 10) || 0;
 
         this.set('totalSec', currentTime);
         this._currentTime = currentTime;
@@ -59,10 +67,10 @@ RBStopwatch.Stopwatch = Backbone.Model.extend({
         this.listenTo(pendingReview, 'publishing', this._onReviewDone);
     },
 
-    /*
+    /**
      * Toggle the stopwatch on or off.
      */
-    toggle: function() {
+    toggle() {
         if (this._timerHandle) {
             this._stop();
         } else {
@@ -70,10 +78,10 @@ RBStopwatch.Stopwatch = Backbone.Model.extend({
         }
     },
 
-    /*
+    /**
      * Start the stopwatch.
      */
-    _start: function() {
+    _start() {
         console.assert(this._timerHandle === null);
 
         this._startTime = Date.now();
@@ -82,31 +90,33 @@ RBStopwatch.Stopwatch = Backbone.Model.extend({
         this.set('timerOn', true);
     },
 
-    /*
+    /**
      * Stop the stopwatch.
+     *
+     * Args:
+     *     options (object, optional):
+     *         Options for the operation.
+     *
+     * Option Args:
+     *     skipSave (boolean):
+     *         Whether to skip saving the stopwatch value.
      */
-    _stop: function(options) {
-        var addedTime,
-            pendingReview,
-            extraData;
-
-        options = options || {};
-
+    _stop(options={}) {
         console.assert(this._timerHandle !== null);
         console.assert(this._startTime !== null);
 
         window.clearInterval(this._timerHandle);
         this._timerHandle = null;
 
-        addedTime = Math.floor((Date.now() - this._startTime) / 1000);
+        const addedTime = Math.floor((Date.now() - this._startTime) / 1000);
         this._currentTime += addedTime;
         this.set({
             totalSec: this._currentTime,
             timerOn: false
         });
 
-        pendingReview = this.get('pendingReview');
-        extraData = pendingReview.get('extraData');
+        const pendingReview = this.get('pendingReview');
+        const extraData = pendingReview.get('extraData');
         extraData['rbstopwatch.reviewTime'] = this._currentTime;
         pendingReview.set('extraData', extraData);
 
@@ -116,76 +126,86 @@ RBStopwatch.Stopwatch = Backbone.Model.extend({
         }
     },
 
-    /*
+    /**
      * Handler for events which signify that the review is "done" (notably
      * 'destroy' and 'publishing').
      *
      * If the stopwatch is currently running, stop it and set the results in
      * the model without saving it to the server.
      */
-    _onReviewDone: function() {
+    _onReviewDone() {
         if (this.get('timerOn')) {
             this._stop({skipSave: true});
         }
     },
 
-    /*
+    /**
      * Handle a tick. This updates the 'totalSec' attribute;
      */
-    _onTick: function() {
-        var addedTime;
-
+    _onTick() {
         console.assert(this._startTime !== null);
 
-        addedTime = Math.floor((Date.now() - this._startTime) / 1000);
+        const addedTime = Math.floor((Date.now() - this._startTime) / 1000);
         this.set('totalSec', this._currentTime + addedTime);
-    }
+    },
 }, {
     instance: null,
 
-    /*
-     * Creates the stopwatch model singleton.
+    /**
+     * Create the stopwatch model singleton.
+     *
+     * Args:
+     *     attrs (object):
+     *         Model attribute values.
+     *
+     * Returns:
+     *     RBStopwatch.Stopwatch:
+     *     The stopwatch model instance.
      */
-    create: function(options) {
+    create(attrs) {
         if (!this.instance) {
-            this.instance = new RBStopwatch.Stopwatch(options);
+            this.instance = new RBStopwatch.Stopwatch(attrs);
         }
 
         return this.instance;
-    }
+    },
 });
 
 
-/*
+/**
  * The stopwatch view.
  */
 RBStopwatch.StopwatchView = Backbone.View.extend({
     id: 'rbstopwatch-stopwatch',
 
-    template: _.template([
-        '<div class="<%= stopwatchClass %>">',
-        ' &#x1F551;<%= display %>',
-        '</div>',
-    ].join('')),
+    template: _.template(dedent`
+        <div class="<%- stopwatchClass %>">
+         &#x1F551;<%- display %>
+        </div>
+    `),
 
     events: {
         'click': 'toggle',
     },
 
-    /*
+    /**
      * Initialize the view
      */
-    initialize: function() {
+    initialize() {
         this.listenTo(this.model, 'change', this.render);
 
         window.addEventListener('beforeunload',
                                 _.bind(this.beforeUnload, this));
     },
 
-    /*
+    /**
      * Render the view
+     *
+     * Returns:
+     *     RBStopwatch.StopwatchView:
+     *     This object, for chaining.
      */
-    render: function() {
+    render() {
         var totalSec = this.model.get('totalSec'),
             timerOn = this.model.get('timerOn'),
             display = RBStopwatch.formatTimeString(totalSec);
@@ -198,65 +218,72 @@ RBStopwatch.StopwatchView = Backbone.View.extend({
         return this;
     },
 
-    /*
+    /**
      * Toggle the stopwatch on or off.
      */
-    toggle: function() {
+    toggle() {
         this.model.toggle();
     },
 
-    /*
-     * Handler for the window's beforeunload event to confirm that users want
-     * to navigate away while the stopwatch is running.
+    /**
+     * Handler for the window's beforeunload event.
+     *
+     * This confirms that users want to navigate away while the stopwatch
+     * is running.
+     *
+     * Args:
+     *     ev (Event):
+     *         The beforeunload event.
      */
-    beforeUnload: function(ev) {
-        var message;
-
+    beforeUnload(ev) {
         if (this.model.get('timerOn')) {
-            message = 'The review stopwatch is still running. If you leave ' +
-                      'without stopping it, the timer info for this page ' +
-                      'will be lost.';
+            const message = ('The review stopwatch is still running. If you ' +
+                             'leave without stopping it, the timer info for ' +
+                             'this page will be lost.');
 
             (ev || window.event).returnValue = message;
             return message;
         }
 
         return null;
-    }
+    },
 });
 
 
 RBStopwatch.ReviewDialogHookView = Backbone.View.extend({
-    template: _.template([
-        '<%- prefixText %> ',
-        '<span class="<%- className %>"><%- timeText %></div>'
-    ].join('')),
+    template: _.template(dedent`
+        <%- prefixText %>
+        <span class="<%- className %>"><%- timeText %></div>
+    `),
 
-    /*
+    /**
      * Initialize the view.
      */
-    initialize: function() {
-        var stopwatch = RBStopwatch.Stopwatch.instance;
+    initialize() {
+        const stopwatch = RBStopwatch.Stopwatch.instance;
 
         if (stopwatch) {
             this.listenTo(stopwatch, 'change', this.render);
         }
     },
 
-    /*
+    /**
      * Render the view.
+     *
+     * Returns:
+     *     RBStopwatch.ReviewDialogHookView:
+     *     This object, for chaining.
      */
-    render: function() {
-        var stopwatch = RBStopwatch.Stopwatch.instance,
-            extraData,
-            currentTime,
-            timerOn = false;
+    render() {
+        const stopwatch = RBStopwatch.Stopwatch.instance;
+        let currentTime;
+        let timerOn = false;
 
         if (stopwatch) {
             timerOn = stopwatch.get('timerOn');
             currentTime = stopwatch.get('totalSec');
         } else {
-            extraData = this.model.get('extraData') || {};
+            const extraData = this.model.get('extraData') || {};
             currentTime = parseInt(extraData['rbstopwatch.reviewTime'], 10) || 0;
         }
 
@@ -275,38 +302,36 @@ RBStopwatch.ReviewDialogHookView = Backbone.View.extend({
 });
 
 
-/*
+/**
  * Extends Review Board with a stopwatch to track total review time.
  */
 RBStopwatch.Extension = RB.Extension.extend({
-    /*
+    /**
      * Initialize the extension.
      */
-    initialize: function() {
-        var reviewDialogHook;
+    initialize() {
+        RB.Extension.prototype.initialize.call(this);
 
-        _super(this).initialize.call(this);
-
-        reviewDialogHook = new RB.ReviewDialogHook({
+        this.reviewDialogHook = new RB.ReviewDialogHook({
             extension: this,
-            viewType: RBStopwatch.ReviewDialogHookView
+            viewType: RBStopwatch.ReviewDialogHookView,
         });
 
-        RB.PageManager.ready(function(page) {
-            var pendingReview = page.pendingReview;
+        RB.PageManager.ready(page => {
+            const pendingReview = page.pendingReview;
 
             pendingReview.ready({
-                ready: function() {
+                ready: () => {
                     this.stopwatchView = new RBStopwatch.StopwatchView({
                         model: RBStopwatch.Stopwatch.create({
-                            pendingReview: pendingReview
-                        })
+                            pendingReview: pendingReview,
+                        }),
                     });
 
                     this.stopwatchView.render();
                     $('body').append(this.stopwatchView.$el);
-                }
-            }, this);
-        }, this);
-    }
+                },
+            });
+        });
+    },
 });

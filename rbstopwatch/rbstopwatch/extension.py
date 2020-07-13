@@ -1,3 +1,5 @@
+"""Review Stopwatch extension for Review Board."""
+
 from __future__ import unicode_literals
 
 from reviewboard.extensions.base import Extension, JSExtension
@@ -40,7 +42,7 @@ class StopwatchExtension(Extension):
 
     js_bundles = {
         'default': {
-            'source_filenames': ['js/stopwatch.js'],
+            'source_filenames': ['js/stopwatch.es6.js'],
             'apply_to': _apply_to_url_names,
         },
     }

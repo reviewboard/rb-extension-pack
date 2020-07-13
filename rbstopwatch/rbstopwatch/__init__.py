@@ -1,3 +1,5 @@
+"""Review Stopwatch extension for Review Board."""
+
 from __future__ import unicode_literals
 
 

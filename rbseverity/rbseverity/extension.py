@@ -1,3 +1,7 @@
+"""Comment severity extension for Review Board."""
+
+from __future__ import unicode_literals
+
 from reviewboard.extensions.base import Extension, JSExtension
 from reviewboard.extensions.hooks import CommentDetailDisplayHook
 from reviewboard.urls import reviewable_url_names, review_request_url_names
@@ -12,6 +16,7 @@ class SeverityCommentDetailDisplay(CommentDetailDisplayHook):
     This extends the comments in the review dialog and in the e-mails
     to show the selected severity.
     """
+
     SEVERITY_LABELS = {
         'major': 'Major',
         'minor': 'Minor',
@@ -30,7 +35,16 @@ class SeverityCommentDetailDisplay(CommentDetailDisplayHook):
     }
 
     def render_review_comment_detail(self, comment):
-        """Renders the severity of a comment on a review."""
+        """Render the severity of a comment on a review.
+
+        Args:
+            comment (reviewboard.reviews.models.BaseComment):
+                The comment to render for.
+
+        Returns:
+            unicode:
+            The rendered HTML.
+        """
         severity = comment.extra_data.get('severity')
 
         if not severity:
@@ -42,7 +56,19 @@ class SeverityCommentDetailDisplay(CommentDetailDisplayHook):
                 % (severity, self._get_severity_label(severity)))
 
     def render_email_comment_detail(self, comment, is_html):
-        """Renders the severity of a comment on an e-mail."""
+        """Render the severity of a comment on an e-mail.
+
+        Args:
+            comment (reviewboard.reviews.models.BaseComment):
+                The comment to render for.
+
+            is_html (boolean):
+                Whether to render HTML or plain text.
+
+        Returns:
+            unicode:
+            The rendered comment severity.
+        """
         severity = comment.extra_data.get('severity')
 
         if not severity:
@@ -64,6 +90,8 @@ class SeverityCommentDetailDisplay(CommentDetailDisplayHook):
 
 
 class SeverityJSExtension(JSExtension):
+    """Javascript extension for the severity extension."""
+
     model_class = 'RBSeverity.Extension'
     apply_to = apply_to_url_names
 
@@ -75,6 +103,7 @@ class SeverityExtension(Extension):
     severity level. This level will appear in the reviews, in e-mails, and
     in the API (through the comment's extra_data).
     """
+
     metadata = {
         'Name': 'Comment Severity',
     }
@@ -90,10 +119,11 @@ class SeverityExtension(Extension):
 
     js_bundles = {
         'severity-review': {
-            'source_filenames': ['js/severity.js'],
+            'source_filenames': ['js/severity.es6.js'],
             'apply_to': apply_to_url_names,
         }
     }
 
     def initialize(self):
+        """Initialize the extension."""
         SeverityCommentDetailDisplay(self)

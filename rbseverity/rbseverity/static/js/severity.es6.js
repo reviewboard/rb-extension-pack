@@ -1,7 +1,7 @@
-RBSeverity = {};
+window.RBSeverity = {};
 
 
-/*
+/**
  * Extends the comment dialog to provide buttons for severity.
  *
  * The Save button will be removed, and in its place will be a set of
@@ -12,35 +12,46 @@ RBSeverity.CommentDialogHookView = Backbone.View.extend({
     events: {
         'click .buttons .save-major': '_onSaveMajorClicked',
         'click .buttons .save-minor': '_onSaveMinorClicked',
-        'click .buttons .save-info': '_onSaveInfoClicked'
+        'click .buttons .save-info': '_onSaveInfoClicked',
     },
 
-    buttonsTemplate: _.template([
-        '<span class="severity-actions">',
-        '  <input type="button" class="save-major" value="Major" ',
-        '         disabled="true" />',
-        '  <input type="button" class="save-minor" value="Minor" ',
-        '         disabled="true" />',
-        '  <input type="button" class="save-info" value="Info" ',
-        '         disabled="true" />',
-        '</span>'
-    ].join('')),
+    buttonsTemplate: _.template(dedent`
+        <span class="severity-actions">
+          <input type="button" class="save-major" value="Major"
+                 disabled="true" />
+          <input type="button" class="save-minor" value="Minor"
+                 disabled="true" />
+          <input type="button" class="save-info" value="Info"
+                 disabled="true" />
+        </span>
+    `),
 
-    /*
-     * Initializes the view.
+    /**
+     * Initialize the view.
+     *
+     * Args:
+     *     options (object):
+     *         Options for the view.
+     *
+     * Option Args:
+     *     commentDialog (RB.CommentDialogView):
+     *         The comment dialog.
+     *
+     *     commentEditor (RB.CommentEditor):
+     *         The comment editor model.
      */
-    initialize: function(options) {
+    initialize(options) {
         this.commentDialog = options.commentDialog;
         this.commentEditor = options.commentEditor;
     },
 
-    /*
-     * Renders the additions to the comment dialog.
+    /**
+     * Render the additions to the comment dialog.
      *
      * This will remove the Save button and set up the new buttons.
      */
-    render: function() {
-        var $severityButtons = $(this.buttonsTemplate());
+    render() {
+        const $severityButtons = $(this.buttonsTemplate());
 
         this.commentDialog.$saveButton.remove();
         this.commentDialog.$buttons.prepend($severityButtons);
@@ -49,55 +60,59 @@ RBSeverity.CommentDialogHookView = Backbone.View.extend({
             .bindVisibility(this.commentEditor, 'canEdit')
             .bindProperty('disabled', this.commentEditor, 'canSave', {
                 elementToModel: false,
-                inverse: true
+                inverse: true,
             });
 
         /* Set a default severity, in case the user hits Control-Enter. */
         this.commentEditor.setExtraData('severity', 'info');
     },
 
-    /*
+    /**
      * Handler for when the "Major" button is clicked.
      *
      * Saves the comment with a "Major" severity.
      */
-    _onSaveMajorClicked: function() {
+    _onSaveMajorClicked() {
         this._saveCommon('major');
     },
 
-    /*
+    /**
      * Handler for when the "Minor" button is clicked.
      *
      * Saves the comment with a "Minor" severity.
      */
-    _onSaveMinorClicked: function() {
+    _onSaveMinorClicked() {
         this._saveCommon('minor');
     },
 
-    /*
+    /**
      * Handler for when the "Info" button is clicked.
      *
      * Saves the comment with an "Info" severity.
      */
-    _onSaveInfoClicked: function() {
+    _onSaveInfoClicked() {
         this._saveCommon('info');
     },
 
-    /*
+    /**
      * Common function for saving with a severity.
      *
      * This will set the severity for the comment and then save it.
+     *
+     * Args:
+     *     severity (string):
+     *         The severity to set.
      */
-    _saveCommon: function(severity) {
+    _saveCommon(severity) {
         if (this.commentEditor.get('canSave')) {
             this.commentEditor.setExtraData('severity', severity);
             this.commentDialog.save();
         }
-    }
+    },
 });
 
 
-/*
+/**
  * Extends the review dialog to allow setting severities on unpublished
  * comments.
  *
@@ -111,26 +126,30 @@ RBSeverity.CommentDialogHookView = Backbone.View.extend({
  */
 RBSeverity.ReviewDialogCommentHookView = Backbone.View.extend({
     events: {
-        'change select': '_onSeverityChanged'
+        'change select': '_onSeverityChanged',
     },
 
-    template: _.template([
-        '<label for="<%- id %>">Severity:</label> ',
-        '<select id="<%- id %>">',
-        ' <option value="major">Major</option>',
-        ' <option value="minor">Minor</option>',
-        ' <option value="info">Info</option>',
-        '</select>'
-    ].join('')),
+    template: _.template(dedent`
+        <label for="<%- id %>">Severity:</label>
+        <select id="<%- id %>">
+         <option value="major">Major</option>
+         <option value="minor">Minor</option>
+         <option value="info">Info</option>
+        </select>
+    `),
 
-    /*
-     * Renders the editor for a comment's severity.
+    /**
+     * Render the editor for a comment's severity.
+     *
+     * Returns:
+     *     RBSeverity.ReviewDialogCommentHookView:
+     *     This object, for chaining.
      */
-    render: function() {
-        var severity = this.model.get('extraData').severity;
+    render() {
+        const severity = this.model.get('extraData').severity;
 
         this.$el.html(this.template({
-            id: 'severity_' + this.model.id
+            id: 'severity_' + this.model.id,
         }));
 
         this._$select = this.$('select');
@@ -144,36 +163,39 @@ RBSeverity.ReviewDialogCommentHookView = Backbone.View.extend({
         return this;
     },
 
-    /*
+    /**
      * Handler for when the severity is changed by the user.
      *
      * Updates the severity on the comment to match.
      */
-    _onSeverityChanged: function() {
+    _onSeverityChanged() {
         this.model.get('extraData').severity = this._$select.val();
         this.model.save();
-    }
+    },
 });
 
 
-/*
+/**
  * Extends Review Board with comment severity support.
  *
  * This plugs into the comment dialog and review dialog to add the ability
  * to set severities for comments.
  */
 RBSeverity.Extension = RB.Extension.extend({
-    initialize: function() {
-        _super(this).initialize.call(this);
+    /**
+     * Initialize the JavaScript extension.
+     */
+    initialize() {
+        RB.Extension.prototype.initialize.call(this);
 
         new RB.CommentDialogHook({
             extension: this,
-            viewType: RBSeverity.CommentDialogHookView
+            viewType: RBSeverity.CommentDialogHookView,
         });
 
         new RB.ReviewDialogCommentHook({
             extension: this,
-            viewType: RBSeverity.ReviewDialogCommentHookView
+            viewType: RBSeverity.ReviewDialogCommentHookView,
         });
-    }
+    },
 });

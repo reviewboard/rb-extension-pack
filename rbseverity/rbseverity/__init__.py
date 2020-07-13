@@ -1,3 +1,5 @@
+"""Comment severity extension for Review Board."""
+
 from __future__ import unicode_literals
 
 

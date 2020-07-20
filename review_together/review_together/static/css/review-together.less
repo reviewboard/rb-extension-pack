@@ -6,14 +6,13 @@
 
 @import (reference) "@{STATIC_ROOT}rb/css/defs.less";
 
-@border-blue: #728eac;
 @scroll-indicator-z-index: 10000;
 
 #togetherjs-container.togetherjs {
   font-family: inherit;
 
   a {
-    color: @navbar-text-color !important;
+    color: #rb-ns-ui.colors[@black] !important;
     font-size: 110% !important;
   }
 
@@ -22,23 +21,23 @@
   }
 
   #togetherjs-audio-button.togetherjs-active {
-    background-color: @headerbar-bg-active !important;
+    background-color: #rb-ns-ui.colors[@blue-60] !important;
   }
 
   #togetherjs-buttons #togetherjs-share-button.togetherjs-active {
-    background-color: @headerbar-bg-active !important;
+    background-color: #rb-ns-ui.colors[@blue-60] !important;
   }
 
   #togetherjs-chat-button.togetherjs-active {
-    background-color: @headerbar-bg-active !important;
+    background-color: #rb-ns-ui.colors[@blue-60] !important;
   }
 
   #togetherjs-dock {
-    background-color: @headerbar-bg !important;
+    background-color: #rb-ns-ui.colors[@blue-60] !important;
 
     #togetherjs-buttons {
       .togetherjs-button:hover {
-        background-color: @headerbar-bg-active;
+        background-color: #rb-ns-ui.colors[@blue-60];
       }
     }
 
@@ -50,9 +49,9 @@
   }
 
   #togetherjs-menu {
-    background-color: @headerbar-bg;
+    background-color: #rb-ns-ui.colors[@blue-60];
     border: none;
-    color: white;
+    color: #rb-ns-ui.colors[@white];
     font-family: inherit;
     text-decoration: none;
 
@@ -65,15 +64,15 @@
     }
 
     .togetherjs-menu-item:hover {
-      background-color: @headerbar-bg-active;
+      background-color: #rb-ns-ui.colors[@blue-60];
     }
   }
 
   #togetherjs-rtc-info section.togetherjs-buttons button {
-    background-color: #e6e6e6 !important;
-    border: 1px solid #ccc !important;
-    border-bottom-color: #bbb !important;
-    color: #333 !important;
+    background-color: #rb-ns-ui.colors[@grey-80] !important;
+    border: 1px solid #rb-ns-ui.colors[@grey-60] !important;
+    border-bottom-color: #rb-ns-ui.colors[@grey-50] !important;
+    color: #rb-ns-ui.colors[@grey-10] !important;
     font-family: inherit;
     margin: 2px 2px 2px 0.2em !important;
     padding: 3px 8px !important;
@@ -81,27 +80,26 @@
   }
 
   .togetherjs-modal {
-
     header {
       background: @light-blue !important;
-      border-bottom: 1px solid @border-blue !important;
-      color: black !important;
+      border-bottom: 1px solid #rb-ns-ui.colors[@blue-20] !important;
+      color: #rb-ns-ui.colors[@black] !important;
       font-family: inherit;
       padding: 5px 0 0 10px !important;
       text-align: left !important;
 
       button.togetherjs-close {
-        border-left: 1px solid @border-blue !important;
+        border-left: 1px solid #rb-ns-ui.colors[@blue-20] !important;
         height: 29px !important;
         margin: -5px 0 0 0 !important;
       }
     }
 
     section.togetherjs-buttons button.togetherjs-modal-dont-join, button.togetherjs-dismiss {
-      background-color: #e6e6e6 !important;
-      border: 1px solid #ccc !important;
-      border-bottom-color: #bbb !important;
-      color: #333 !important;
+      background-color: #rb-ns-ui.colors[@grey-80] !important;
+      border: 1px solid #rb-ns-ui.colors[@grey-60] !important;
+      border-bottom-color: #rb-ns-ui.colors[@grey-50] !important;
+      color: #rb-ns-ui.colors[@grey-10] !important;
       font-family: inherit;
       margin: 2px 2px 2px 0.2em !important;
       padding: 3px 8px !important;
@@ -110,12 +108,12 @@
   }
 
   .togetherjs-notification {
-    background: #fff;
+    background: #rb-ns-ui.colors[@white];
     border: 1px @box-border-color solid;
     padding-left: 15px;
 
     &:hover {
-      background-color: #fff;
+      background-color: #rb-ns-ui.colors[@white];
     }
 
     img.togetherjs-notification-logo {
@@ -132,7 +130,7 @@
       }
 
       .togetherjs-chat-left-item {
-        background: #fff;
+        background: #rb-ns-ui.colors[@white];
       }
     }
   }
@@ -142,22 +140,22 @@
 
     header {
       background: @light-blue !important;
-      border-bottom: 1px solid @border-blue !important;
-      color: black !important;
+      border-bottom: 1px solid #rb-ns-ui.colors[@blue-20] !important;
+      color: #rb-ns-ui.colors[@black] !important;
       font-family: inherit;
       padding: 5px 0 0 10px !important;
       text-align: left !important;
 
       button.togetherjs-close {
-        border-left: 1px solid @border-blue !important;
+        border-left: 1px solid #rb-ns-ui.colors[@blue-20] !important;
         height: 29px !important;
         margin: -5px 0 0 0 !important;
       }
     }
 
     .togetherjs-share-link {
-      background-color: #eeeeee;
-      border: 1px black solid;
+      background-color: #rb-ns-ui.colors[@grey-80];
+      border: 1px #rb-ns-ui.colors[@black] solid;
       .border-radius(6px);
       font-size: 1.2em;
       margin: 0;
@@ -165,7 +163,7 @@
     }
 
     .togetherjs-share-link:focus {
-      border: 1px black solid !important;
+      border: 1px #rb-ns-ui.colors[@black] solid !important;
     }
   }
 }

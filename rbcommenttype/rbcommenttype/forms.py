@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import json
 
 from django.forms import BooleanField, Field, Widget
-from django.forms.util import flatatt
+from django.forms.utils import flatatt
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 
@@ -15,7 +15,10 @@ class CommentTypesWidget(Widget):
 
     def render(self, name, value, attrs=None):
         """Render the widget."""
-        attrs = self.build_attrs(attrs, type='hidden', name=name)
+        attrs = self.build_attrs(attrs, {
+            'type': 'hidden',
+            'name': name,
+        })
 
         if value:
             attrs['value'] = json.dumps(value)

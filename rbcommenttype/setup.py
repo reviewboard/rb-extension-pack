@@ -14,14 +14,14 @@ setup(
     author_email='support@beanbaginc.com',
     maintainer='Beanbag, Inc.',
     maintainer_email='support@beanbaginc.com',
-    packages=[b'rbcommenttype'],
+    packages=['rbcommenttype'],
     entry_points={
         'reviewboard.extensions': [
             'rbcommenttype = rbcommenttype.extension:CommentTypeExtension',
         ]
     },
     package_data={
-        b'rbcommenttype': [
+        'rbcommenttype': [
             'templates/*.html',
             'templates/*.txt',
         ],

@@ -37,7 +37,7 @@ class MotdSettingsForm(SettingsForm):
                 The value to set.
         """
         if key == 'message':
-            message_id = hashlib.sha256(value).hexdigest()
+            message_id = hashlib.sha256(value.encode('utf-8')).hexdigest()
             self.set_key_value('message_id', message_id)
 
         super(MotdSettingsForm, self).set_key_value(key, value)

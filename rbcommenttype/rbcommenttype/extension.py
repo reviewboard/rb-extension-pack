@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+"""The comment type extension."""
 
 import json
 

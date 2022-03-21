@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-from __future__ import unicode_literals
-
 from reviewboard.extensions.packaging import setup
 
 from rbcommenttype import get_package_version
@@ -33,10 +31,7 @@ setup(
             'templates/*.txt',
         ],
     },
-    python_requires=(
-        '>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*'
-        '!=3.5.*'
-    ),
+    python_requires='>=3.7',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',

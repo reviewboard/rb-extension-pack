@@ -1,15 +1,15 @@
-from __future__ import unicode_literals
+"""URLs for the comment type extension."""
 
-from django.conf.urls import url
+from django.urls import path
+from reviewboard.extensions.views import configure_extension
 
 from rbcommenttype.extension import CommentTypeExtension
 from rbcommenttype.forms import CommentTypeSettingsForm
 
-from reviewboard.extensions.views import configure_extension
-
 
 urlpatterns = [
-    url('^$',
+    path(
+        '',
         configure_extension,
         {
             'ext_class': CommentTypeExtension,

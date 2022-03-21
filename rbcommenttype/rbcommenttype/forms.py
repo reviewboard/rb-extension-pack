@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+"""Forms for the comment type extension."""
 
 import json
 
@@ -13,7 +13,7 @@ from djblets.extensions.forms import SettingsForm
 class CommentTypesWidget(Widget):
     """A form widget for configuring comment types."""
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         """Render the widget."""
         attrs = self.build_attrs(attrs, {
             'type': 'hidden',

@@ -1,10 +1,8 @@
-from __future__ import unicode_literals
-
 from reviewboard.extensions.packaging import setup
 
 
 PACKAGE = 'rb-user-stats'
-VERSION = '0.1'
+VERSION = '1.0'
 
 setup(
     name=PACKAGE,
@@ -16,12 +14,13 @@ setup(
     maintainer='Beanbag, Inc.',
     maintainer_email='support@beanbaginc.com',
     packages=['rb_user_stats'],
+    python_requires='>=3.7',
     entry_points={
         'reviewboard.extensions':
             '%s = rb_user_stats.extension:RBUserStats' % PACKAGE,
     },
     package_data={
-        b'rb_user_stats': [
+        'rb_user_stats': [
             'templates/rb_user_stats/*.html',
         ],
     }

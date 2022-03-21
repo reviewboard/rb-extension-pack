@@ -1,8 +1,7 @@
-from __future__ import unicode_literals
+"""User statistics extension for Review Board."""
 
 import time
 
-from django.utils import six
 from reviewboard.extensions.base import Extension
 from reviewboard.extensions.hooks import UserInfoboxHook
 from reviewboard.reviews.models import ReviewRequest
@@ -29,10 +28,10 @@ class UserStatsInfoboxHook(UserInfoboxHook):
                 The current local site, if any.
 
         Returns:
-            six.text_type:
+            str:
             Data to include in the ETag.
         """
-        return six.text_type(time.time())
+        return '%f' % time.time()
 
     def get_extra_context(self, user, request, local_site):
         """Return context to include when rendering the template.

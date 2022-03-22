@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+"""Command to dump the contents of the demo server."""
 
 import sys
 
@@ -9,6 +9,8 @@ from djblets.extensions.models import RegisteredExtension
 
 
 class Command(BaseCommand):
+    """Command to dump the contents of the demo server."""
+
     help = 'Dumps the contents of the demo server for use in resets.'
 
     EXCLUDE_APPS = [
@@ -28,6 +30,12 @@ class Command(BaseCommand):
     ]
 
     def handle(self, **options):
+        """Run the command.
+
+        Args:
+            **options (dict):
+                Options for the command.
+        """
         # Clean up anything in the database that we don't want.
         User.objects.filter(username__startswith='guest').delete()
         RegisteredExtension.objects.exclude(

@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+"""Command to reset the state of the demo server."""
 
 import os
 import shutil
@@ -20,9 +20,17 @@ from reviewboard.scmtools.models import Tool
 
 
 class Command(BaseCommand):
+    """Command to reset the state of the demo server."""
+
     help = 'Resets the state of the demo server.'
 
     def handle(self, **options):
+        """Run the command.
+
+        Args:
+            **options (dict):
+                Options for the command.
+        """
         demo_fixtures = getattr(settings, 'DEMO_FIXTURES', None)
         demo_upload_path = getattr(settings, 'DEMO_UPLOAD_PATH', None)
         demo_upload_owner = getattr(settings, 'DEMO_UPLOAD_PATH_OWNER', None)

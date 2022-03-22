@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+"""Forms for the demo server extension."""
 
 import re
 
@@ -11,6 +11,7 @@ from reviewboard.reviews.models import Group
 
 class DemoAuthSettingsForm(SettingsForm):
     """Configuration form for the demo authentication settings."""
+
     auth_user_prefix = forms.CharField(
         label=_('Username prefix'),
         help_text=_('The prefix that generated usernames will start with.'))
@@ -26,18 +27,35 @@ class DemoAuthSettingsForm(SettingsForm):
 
     auth_default_groups = forms.CharField(
         label=_('Default groups'),
-        help_text=_('Comma-separated list of default group IDs.'),
+        help_text=_('Comma-separated list of default group names.'),
         widget=forms.TextInput(attrs={'size': 40}),
         required=False)
 
     def __init__(self, siteconfig, *args, **kwargs):
+        """Initialize the form.
+
+        Args:
+            siteconfig (djblets.siteconfig.models.SiteConfiguration):
+                The siteconfig object.
+
+            *args (tuple):
+                Positional arguments to pass to the base class.
+
+            **kwargs (dict):
+                Keyword arguments to pass to the base class.
+        """
         from rbdemo.extension import DemoExtension
 
         super(DemoAuthSettingsForm, self).__init__(
             DemoExtension.instance, *args, **kwargs)
 
     def clean_auth_default_groups(self):
-        """Validates and serializes a list of groups."""
+        """Validate and serialize a list of groups.
+
+        Returns:
+            list of reviewboard.reviews.models.Group:
+            The list of groups to add new users to.
+        """
         group_list = re.split(r',\s*',
                               self.cleaned_data['auth_default_groups'])
 
@@ -55,10 +73,13 @@ class DemoAuthSettingsForm(SettingsForm):
         return group_list
 
     def load(self):
+        """Load the initial form data."""
         super(DemoAuthSettingsForm, self).load()
 
         self.fields['auth_default_groups'].initial = \
             ', '.join(self.settings['auth_default_groups'])
 
     class Meta:
+        """Metadata for the config form."""
+
         title = _('Demo Authentication Settings')

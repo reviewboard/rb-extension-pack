@@ -1,17 +1,16 @@
-from __future__ import unicode_literals
+"""Authentication backend for the demo server."""
 
 import random
 
 from django.contrib.auth.models import User
-from django.utils.six.moves import range
 from django.utils.translation import ugettext_lazy as _
-from reviewboard.accounts.backends import AuthBackend
+from reviewboard.accounts.backends.base import BaseAuthBackend
 from reviewboard.reviews.models import Group
 
 from rbdemo.forms import DemoAuthSettingsForm
 
 
-class DemoAuthBackend(AuthBackend):
+class DemoAuthBackend(BaseAuthBackend):
     """Authentication backend for the demo server.
 
     This allows people to log in with a pre-generated username and password,
@@ -30,6 +29,7 @@ class DemoAuthBackend(AuthBackend):
     the configured review groups, in order to give them something they can
     see in their dashboard.
     """
+
     backend_id = 'demo'
     name = _('Demo Server')
     settings_form = DemoAuthSettingsForm
@@ -38,6 +38,11 @@ class DemoAuthBackend(AuthBackend):
 
     @property
     def login_instructions(self):
+        """The instructions to show on the login screen.
+
+        Type:
+            str
+        """
         settings = self.extension.settings
         user_prefix = settings.get('auth_user_prefix')
         max_guest_id = settings.get('auth_user_max_id')
@@ -50,18 +55,48 @@ class DemoAuthBackend(AuthBackend):
 
             if not User.objects.filter(username=username).exists():
                 break
+        else:
+            # Give up and just use the basic "guest" name. They might see other
+            # users' data but that's better than getting an error.
+            username = user_prefix
 
         return (_('To log into the demo server, use username "%s", '
                   'password "%s"')
                 % (username, demo_password))
 
     def __init__(self, *args, **kwargs):
+        """Initialize the authentication backend.
+
+        Args:
+            *args (tuple):
+                Positional arguments to pass to the base class.
+
+            **kwargs (dict):
+                Keyword arguments to pass to the base class.
+        """
         from rbdemo.extension import DemoExtension
 
         super(DemoAuthBackend, self).__init__(*args, **kwargs)
         self.extension = DemoExtension.instance
 
-    def authenticate(self, username, password):
+    def authenticate(self, request, username, password):
+        """Authenticate a user.
+
+        Args:
+            request (django.http.HttpRequest):
+                The request object.
+
+            username (str):
+                The username to authenticate.
+
+            password (str):
+                The password to authenticate.
+
+        Returns:
+            django.contrib.auth.models.User:
+            The authenticated user. ``None`` if the user could not be
+            authenticated.
+        """
         settings = self.extension.settings
         user_prefix = settings.get('auth_user_prefix')
         demo_password = settings.get('auth_password')
@@ -85,6 +120,22 @@ class DemoAuthBackend(AuthBackend):
         return None
 
     def get_or_create_user(self, username, request, password=None):
+        """Return a user object.
+
+        Args:
+            username (str):
+                The username of the user.
+
+            request (django.http.HttpRequest):
+                The request object.
+
+            password (str, unused):
+                The user's password.
+
+        Returns:
+            django.contrib.auth.models.User:
+            The user object.
+        """
         user, is_new = User.objects.get_or_create(username=username)
 
         if is_new:

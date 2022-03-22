@@ -74,13 +74,11 @@ Checklist.TemplateView = Backbone.View.extend({
     /**
      * Remove the template.
      */
-    _removeTemplate() {
+    async _removeTemplate() {
         var collection = this.model.collection;
 
-        this.model.destroy({
-            wait: true,
-            success: () => collection.remove(this.model),
-        });
+        await this.model.destroy();
+        collection.remove(this.model);
     },
 
     /**
@@ -256,12 +254,14 @@ Checklist.TemplateEditView = Backbone.View.extend({
  */
 Checklist.AccountPageView = Backbone.View.extend({
     template: _.template(dedent`
-        <div class="rbchecklist-accountpage">
-         <div class="rbchecklist-actions">
-          <input type="button" value="New template"
-                 id="rbchecklist-template-add-new">
+        <div class="djblets-l-config-forms-container">
+         <div class="rbchecklist-accountpage">
+          <div class="rbchecklist-actions">
+           <input type="button" value="New template"
+                  id="rbchecklist-template-add-new">
+          </div>
+          <div class="rbchecklist-templates"></div>
          </div>
-         <div class="rbchecklist-templates"></div>
         </div>
     `),
 

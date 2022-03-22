@@ -1,8 +1,9 @@
-from __future__ import unicode_literals
+"""API resources for the checklist extension."""
 
 from rbchecklist.resources.checklist_item import checklist_item_resource
 from rbchecklist.resources.checklist_resource import checklist_resource
-from rbchecklist.resources.checklist_template import checklist_template_resource
+from rbchecklist.resources.checklist_template import \
+    checklist_template_resource
 
 
 __all__ = [

@@ -62,13 +62,11 @@ Checklist.Template = RB.BaseResource.extend({
      *     attributes (object):
      *         The new attributes to save.
      *
-     *     options (object, optional):
-     *         Options for the save operation.
-     *
-     *     context (object, optional):
-     *         Context to use when calling callbacks.
+     * Returns:
+     *     Promise:
+     *     A promise which resolves when the operation is complete.
      */
-    save(attributes, options={}, context=undefined) {
+    async save(attributes) {
         const oldAttributes = _.clone(this.attributes);
 
         this.set({
@@ -76,19 +74,14 @@ Checklist.Template = RB.BaseResource.extend({
             items: attributes.items,
         });
 
-        _.extend(options, {
-            wait: true,
-            success: (model, response) => {
-                this.set(response.checklist_template);
-                this.trigger('update');
-            },
-            error: () => {
-                this.set(oldAttributes);
-                this.trigger('show');
-            },
-        });
-
-        RB.BaseResource.prototype.save.call(this, options, context);
+        try {
+            const rsp = await RB.BaseResource.prototype.save.call(this);
+            this.set(rsp.checklist_template);
+            this.trigger('update');
+        } catch (err) {
+            this.set(oldAttributes);
+            this.trigger('show');
+        }
     }
 });
 

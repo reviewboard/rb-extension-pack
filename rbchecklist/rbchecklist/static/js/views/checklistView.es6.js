@@ -198,16 +198,13 @@ Checklist.ChecklistView = Backbone.View.extend({
 
         this.checklist = new Checklist.Checklist();
         this.checklist.save({
-            data: {
-                review_request_id: options.reviewRequestID,
-            },
-            success: model => {
-                // Ready the collection of checklist items.
-                this.collection.checklistId = model.get('id');
-                this.collection.fetch();
+            data: { review_request_id: options.reviewRequestID, },
+        }).then(() => {
+            // Ready the collection of checklist items.
+            this.collection.checklistId = this.checklist.get('id');
+            this.collection.fetch();
 
-                this.render();
-            },
+            this.render();
         });
     },
 

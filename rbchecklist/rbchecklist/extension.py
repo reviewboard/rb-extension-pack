@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+"""Checklist extension for Review Board."""
 
 from djblets.webapi.resources import (register_resource_for_model,
                                       unregister_resource_for_model)
@@ -15,6 +15,8 @@ from rbchecklist.models import ChecklistTemplate, ReviewChecklist
 
 
 class ChecklistAccountPageForm(AccountPageForm):
+    """Form for editing checklist templates on the "My Account" page."""
+
     form_id = 'checklist_accountpage_form'
     form_title = 'Manage Checklist Templates'
     save_label = None
@@ -23,6 +25,8 @@ class ChecklistAccountPageForm(AccountPageForm):
 
 
 class ChecklistAccountPage(AccountPage):
+    """Account page to show the checklist templates form."""
+
     page_id = 'checklist_accountpage'
     page_title = 'Checklist Templates'
     form_classes = [ChecklistAccountPageForm]

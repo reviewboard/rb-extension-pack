@@ -1,10 +1,11 @@
-from __future__ import unicode_literals
+"""API endpoint for a checklist item."""
 
-from django.utils import six
 from djblets.webapi.decorators import (webapi_login_required,
                                        webapi_response_errors,
                                        webapi_request_fields)
 from djblets.webapi.errors import DOES_NOT_EXIST
+from djblets.webapi.fields import (BooleanFieldType,
+                                   StringFieldType)
 from reviewboard.webapi.base import WebAPIResource
 from reviewboard.webapi.decorators import webapi_check_local_site
 
@@ -20,15 +21,15 @@ class ChecklistItemResource(WebAPIResource):
 
     fields = {
         'id': {
-            'type': six.text_type,
+            'type': StringFieldType,
             'description': 'The id of the checklist item.',
         },
         'description': {
-            'type': six.text_type,
+            'type': StringFieldType,
             'description': 'The description of the checklist item.',
         },
         'checked': {
-            'type': bool,
+            'type': BooleanFieldType,
             'description': 'Whether the checklist item is finished.',
         },
     }
@@ -48,10 +49,13 @@ class ChecklistItemResource(WebAPIResource):
         except Checklist.ObjectDoesNotExist:
             return DOES_NOT_EXIST
 
-        if six.text_type(checklist_item_id) not in checklist.checklist_items:
+        if isinstance(checklist_item_id, int):
+            checklist_item_id = '%d' % checklist_item_id
+
+        if checklist_item_id not in checklist.checklist_items:
             return DOES_NOT_EXIST
 
-        item = checklist.checklist_items.get(six.text_type(checklist_item_id))
+        item = checklist.checklist_items.get(checklist_item_id)
         return 200, {self.item_result_key: item}
 
     @webapi_login_required
@@ -69,11 +73,11 @@ class ChecklistItemResource(WebAPIResource):
     @webapi_request_fields(
         required={
             'description': {
-                'type': six.text_type,
+                'type': StringFieldType,
                 'description': 'The description of the checklist item.',
             },
             'checked': {
-                'type': bool,
+                'type': BooleanFieldType,
                 'description': 'Whether the item is checked.',
             },
         }
@@ -95,11 +99,11 @@ class ChecklistItemResource(WebAPIResource):
     @webapi_request_fields(
         optional={
             'description': {
-                'type': six.text_type,
+                'type': StringFieldType,
                 'description': 'The description of the checklist item.',
             },
             'checked': {
-                'type': bool,
+                'type': BooleanFieldType,
                 'description': 'Whether the checklist item is completed.',
             },
         }

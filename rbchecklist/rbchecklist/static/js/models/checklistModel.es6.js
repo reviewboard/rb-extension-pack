@@ -151,14 +151,13 @@ Checklist.ChecklistItemCollection = RB.BaseCollection.extend({
      *     attrs (object):
      *         The attributes for the new item.
      */
-    create(attrs) {
+    async create(attrs) {
         const item = new Checklist.ChecklistItem(attrs, {
             collection: this,
         });
 
-        item.save({
-            success: model => this.add(model),
-        });
+        await item.save();
+        this.add(item);
     },
 });
 

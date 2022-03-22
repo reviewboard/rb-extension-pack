@@ -16,6 +16,7 @@ setup(
     maintainer='Beanbag, Inc.',
     maintainer_email='support@beanbaginc.com',
     packages=find_packages(),
+    python_requires='>=3.7',
     entry_points={
         'reviewboard.extensions':
             'rbchecklist = rbchecklist.extension:Checklist',

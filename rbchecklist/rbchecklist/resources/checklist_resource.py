@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+"""Main API resource for the checklist extension."""
 
 from djblets.webapi.decorators import (webapi_login_required,
                                        webapi_request_fields)
@@ -11,6 +11,7 @@ from rbchecklist.resources import checklist_item_resource
 
 
 class ChecklistResource(WebAPIResource):
+    """Main API resource for the checklist extension."""
     name = 'checklist'
     model = ReviewChecklist
     uri_object_key = 'checklist_id'

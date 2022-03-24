@@ -1,7 +1,5 @@
 """Admin site URL definitions for the rbmotd extension."""
 
-from __future__ import unicode_literals
-
 from django.conf.urls import url
 from reviewboard.extensions.views import configure_extension
 

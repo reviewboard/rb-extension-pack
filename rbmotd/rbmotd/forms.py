@@ -1,7 +1,5 @@
 """Forms for the rbmotd extension."""
 
-from __future__ import unicode_literals
-
 import hashlib
 
 from django import forms
@@ -30,7 +28,7 @@ class MotdSettingsForm(SettingsForm):
         ``message_id`` key.
 
         Args:
-            key (unicode):
+            key (str):
                 The key to set.
 
             value (object):

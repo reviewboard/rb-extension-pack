@@ -1,13 +1,11 @@
 """Ship It! ASCII Art extension for Review Board."""
 
-from __future__ import unicode_literals
-
 from reviewboard.extensions.base import Extension
 from reviewboard.extensions.hooks import SignalHook
 from reviewboard.reviews.signals import review_published
 
 
-art_basic = """
+art_basic = r"""
       _~
    _~)_)_~
   )_))_))_)
@@ -16,7 +14,7 @@ art_basic = """
 ~~~~~~~~~~~~~
 """
 
-art_juggernaut_small = """
+art_juggernaut_small = r"""
     __4___
  _  \ \ \ \
 <'\ /_/_/_/
@@ -25,7 +23,7 @@ art_juggernaut_small = """
  ~~~~~~~~~~~
 """
 
-art_juggernaut_big = """
+art_juggernaut_big = r"""
                        _____|\
                   _.--| R B |:
                  <____|.----||
@@ -71,18 +69,19 @@ class AsciiArt(Extension):
 
         SignalHook(self, review_published, self._on_review_published)
 
-    def _on_review_published(self, *args, **kwargs):
+    def _on_review_published(self, review, *args, **kwargs):
         """Handler for when a review is published.
 
         Args:
+            review (reviewboard.reviews.models.Review):
+                The review which was published.
+
             *args (tuple):
                 Positional arguments passed through the signal.
 
             **kwargs (dict):
                 Keyword arguments passed through the signal.
         """
-        review = kwargs.get('review')
-
         # Only add the ship-it ASCII art if this review has a ship-it.
         if review.ship_it:
             rich = hasattr(review, 'rich_text') and review.rich_text

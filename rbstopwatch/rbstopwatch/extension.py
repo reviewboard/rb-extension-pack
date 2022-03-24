@@ -1,7 +1,5 @@
 """Review Stopwatch extension for Review Board."""
 
-from __future__ import unicode_literals
-
 from reviewboard.extensions.base import Extension, JSExtension
 from reviewboard.extensions.hooks import TemplateHook
 from reviewboard.urls import reviewable_url_names, review_request_url_names

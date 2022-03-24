@@ -1,11 +1,8 @@
 """Review UI for XML files."""
 
-from __future__ import unicode_literals
-
 import logging
 
 import pygments
-from django.utils.encoding import force_unicode
 from django.utils.functional import cached_property
 from reviewboard.reviews.ui.base import FileAttachmentReviewUI
 
@@ -60,8 +57,11 @@ class XMLReviewUI(FileAttachmentReviewUI):
                 logging.error('Failed to read from file %s: %s',
                               self.obj.pk, e)
 
+        if isinstance(data_string, bytes):
+            data_string = data_string.decode('utf-8')
+
         data['xmlContent'] = pygments.highlight(
-            force_unicode(data_string),
+            data_string,
             pygments.lexers.XmlLexer(),
             pygments.formatters.HtmlFormatter())
 

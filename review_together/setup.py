@@ -2,7 +2,7 @@ from reviewboard.extensions.packaging import setup
 
 
 PACKAGE = "review-together"
-VERSION = "1.0.0b"
+VERSION = "2.0"
 
 
 setup(
@@ -15,6 +15,7 @@ setup(
         'reviewboard.extensions':
             '%s = review_together.extension:ReviewTogether' % PACKAGE,
     },
+    python_requires='>=3.7',
     package_data={
         'review_together': [
             'htdocs/css/*.css',

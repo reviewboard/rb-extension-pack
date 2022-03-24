@@ -3,6 +3,7 @@
  */
 RB.XMLReviewableView = RB.FileAttachmentReviewableView.extend({
     className: 'xml-review-ui',
+    commentBlockView: RB.AbstractCommentBlockView,
 
     /**
      * Render the view content.

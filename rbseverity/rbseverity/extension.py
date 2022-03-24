@@ -1,7 +1,5 @@
 """Comment severity extension for Review Board."""
 
-from __future__ import unicode_literals
-
 from reviewboard.extensions.base import Extension, JSExtension
 from reviewboard.extensions.hooks import CommentDetailDisplayHook
 from reviewboard.urls import reviewable_url_names, review_request_url_names
@@ -42,7 +40,7 @@ class SeverityCommentDetailDisplay(CommentDetailDisplayHook):
                 The comment to render for.
 
         Returns:
-            unicode:
+            str:
             The rendered HTML.
         """
         severity = comment.extra_data.get('severity')
@@ -66,7 +64,7 @@ class SeverityCommentDetailDisplay(CommentDetailDisplayHook):
                 Whether to render HTML or plain text.
 
         Returns:
-            unicode:
+            str:
             The rendered comment severity.
         """
         severity = comment.extra_data.get('severity')

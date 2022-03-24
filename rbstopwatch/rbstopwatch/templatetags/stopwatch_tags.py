@@ -1,5 +1,3 @@
-from __future__ import division, unicode_literals
-
 from django import template
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _

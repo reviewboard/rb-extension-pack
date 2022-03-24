@@ -1,7 +1,5 @@
 """XML review extension for Review Board."""
 
-from __future__ import unicode_literals
-
 from reviewboard.extensions.base import Extension
 from reviewboard.extensions.hooks import (ReviewUIHook,
                                           FileAttachmentThumbnailHook)

@@ -1,7 +1,5 @@
 """Message of the day extension for Review Board."""
 
-from __future__ import unicode_literals
-
 from reviewboard.extensions.base import Extension
 from reviewboard.extensions.hooks import TemplateHook
 
@@ -52,6 +50,7 @@ class MotdExtension(Extension):
     the top of every page. This can be used for important announcements,
     status updates, downtime notices, or anything else.
     """
+
     metadata = {
         'Name': 'Message of the Day',
         'Summary': (

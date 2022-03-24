@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 
-from __future__ import unicode_literals
-
 from reviewboard.extensions.packaging import setup
 from setuptools import find_packages
 
 
 setup(
     name='rbsentry',
-    version='1.0',
+    version='2.0',
     description='Error monitoring for Review Board using Sentry.io',
     author='Beanbag, Inc.',
     author_email='support@beanbaginc.com',
@@ -18,6 +16,7 @@ setup(
     install_requires=[
         'sentry-sdk',
     ],
+    python_requires='>=3.7',
     entry_points={
         'reviewboard.extensions': [
             'rbsentry = rbsentry.extension:RbsentryExtension',

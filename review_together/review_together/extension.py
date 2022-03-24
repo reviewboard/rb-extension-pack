@@ -1,7 +1,5 @@
 """Review Together extension for Review Board."""
 
-from __future__ import unicode_literals
-
 from reviewboard.extensions.base import Extension, JSExtension
 from reviewboard.extensions.hooks import HeaderActionHook
 

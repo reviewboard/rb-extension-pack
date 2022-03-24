@@ -1,7 +1,5 @@
 """Review Stopwatch extension for Review Board."""
 
-from __future__ import unicode_literals
-
 
 # The version of rbstopwatch
 #
@@ -9,47 +7,77 @@ from __future__ import unicode_literals
 #
 #   (Major, Minor, Micro, Patch, alpha/beta/rc/final, Release Number, Released)
 #
-VERSION = (1, 0, 1, 0, 'final', 0, True)
+VERSION = (2, 0, 0, 0, 'alpha', 0, False)
 
 
 def get_version_string():
-    version = '%s.%s' % (VERSION[0], VERSION[1])
+    """Return the version as a string.
 
-    if VERSION[2] or VERSION[3]:
-        version += ".%s" % VERSION[2]
+    Returns:
+        str:
+        The version number, formatted as a string.
+    """
+    major, minor, micro, patch, tag, relnum, is_release = VERSION
 
-    if VERSION[3]:
-        version += ".%s" % VERSION[3]
+    version = '%s.%s' % (major, minor)
 
-    if VERSION[4] != 'final':
-        if VERSION[4] == 'rc':
-            version += ' RC%s' % VERSION[5]
-        else:
-            version += ' %s %s' % (VERSION[4], VERSION[5])
+    if micro or patch:
+        version += '.%s' % micro
 
-    if not is_release():
-        version += " (dev)"
+        if patch:
+            version += '.%s' % patch
+
+        if tag != 'final':
+            if tag == 'rc':
+                version += ' RC'
+            else:
+                version += ' %s ' % tag
+
+            version += '%s' % relnum
+
+    if not is_release:
+        version += ' (dev)'
 
     return version
 
 
 def get_package_version():
-    version = '%s.%s' % (VERSION[0], VERSION[1])
+    """Return the package version as a string.
 
-    if VERSION[2] or VERSION[3]:
-        version += ".%s" % VERSION[2]
+    Returns:
+        str:
+        The package version number, formatted as a string.
+    """
+    major, minor, micro, patch, tag, relnum = VERSION[:-1]
 
-    if VERSION[3]:
-        version += ".%s" % VERSION[3]
+    version = '%s.%s' % (major, minor)
 
-    if VERSION[4] != 'final':
-        version += '%s%s' % (VERSION[4], VERSION[5])
+    if micro or patch:
+        version += '.%s' % micro
+
+        if patch:
+            version += '.%s' % patch
+
+    if tag != 'final':
+        version += '%s%s' % (
+            {
+                'alpha': 'a',
+                'beta': 'b',
+            }.get(tag, tag),
+            relnum)
 
     return version
 
 
 def is_release():
-    return VERSION[6]
+    """Return whether this is a final release.
+
+    Returns:
+        bool:
+        ``True`` if this version is a final release. ``False`` if built from
+        git or a prerelease.
+    """
+    return VERSION[-1]
 
 
 __version_info__ = VERSION[:-1]

@@ -17,6 +17,7 @@ setup(
     maintainer='Beanbag, Inc.',
     maintainer_email='support@beanbaginc.com',
     packages=['rbseverity'],
+    python_requires='>=3.7',
     entry_points={
         'reviewboard.extensions': [
             'rbseverity = rbseverity.extension:SeverityExtension',

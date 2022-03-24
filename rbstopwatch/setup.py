@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from setuptools import find_packages
 from reviewboard.extensions.packaging import setup
 
@@ -16,6 +14,7 @@ setup(
     maintainer='Beanbag, Inc.',
     maintainer_email='support@beanbaginc.com',
     packages=find_packages(),
+    python_requires='>=3.7',
     entry_points={
         'reviewboard.extensions': [
             'rbstopwatch = rbstopwatch.extension:StopwatchExtension',

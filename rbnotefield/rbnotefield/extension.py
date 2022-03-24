@@ -1,7 +1,5 @@
 """Review Board Extension for adding a "notes" field."""
 
-from __future__ import unicode_literals
-
 from django.utils.translation import ugettext_lazy as _
 from reviewboard.extensions.base import Extension
 from reviewboard.extensions.hooks import ReviewRequestFieldsHook

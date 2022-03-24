@@ -1,8 +1,5 @@
 """XML Mimetype definition."""
 
-from __future__ import unicode_literals
-
-from django.utils.encoding import force_unicode
 import pygments
 
 from reviewboard.attachments.mimetypes import TextMimetype
@@ -21,10 +18,13 @@ class XMLMimetype(TextMimetype):
                 The XML data.
 
         Returns:
-            unicode:
+            str:
             The HTML-formatted rendered string.
         """
+        if isinstance(data_string, bytes):
+            data_string = data_string.decode('utf-8')
+
         return pygments.highlight(
-            force_unicode(data_string),
+            data_string,
             pygments.lexers.XmlLexer(),
             pygments.formatters.HtmlFormatter())

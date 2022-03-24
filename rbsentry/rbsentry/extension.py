@@ -1,7 +1,5 @@
 """Sentry.io extension for Review Board."""
 
-from __future__ import unicode_literals
-
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from reviewboard.extensions.base import Extension

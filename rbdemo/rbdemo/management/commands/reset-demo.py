@@ -15,6 +15,7 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
 from django.core.management.color import no_style
 from django.db import connection, transaction
+from djblets.secrets.crypto import aes_decrypt_base64
 from reviewboard.attachments.models import (FileAttachment,
                                             FileAttachmentHistory)
 from reviewboard.changedescs.models import ChangeDescription
@@ -28,6 +29,7 @@ from reviewboard.reviews.models import (Comment,
                                         Group,
                                         Review,
                                         ReviewRequest)
+from reviewboard.scmtools.crypto_utils import encrypt_password
 from reviewboard.scmtools.models import Repository, Tool
 
 
@@ -43,9 +45,17 @@ class Command(BaseCommand):
             **options (dict):
                 Options for the command.
         """
+        aes_key = getattr(settings, 'DEMO_AES_KEY', None)
         demo_fixtures = getattr(settings, 'DEMO_FIXTURES', None)
         demo_upload_path = getattr(settings, 'DEMO_UPLOAD_PATH', None)
         demo_upload_owner = getattr(settings, 'DEMO_UPLOAD_PATH_OWNER', None)
+
+        if not aes_key or len(aes_key) != 32:
+            raise CommandError(
+                'settings.DEMO_AES_KEY must be set to 32 characters.')
+
+        if isinstance(aes_key, str):
+            aes_key = aes_key.encode('ascii')
 
         if not demo_fixtures:
             raise CommandError(
@@ -115,7 +125,7 @@ class Command(BaseCommand):
                                        gid=gid)
 
                 # Now we can load the demo data.
-                self._load_demo_data(demo_fixtures)
+                self._load_demo_data(demo_fixtures, aes_key=aes_key)
 
         self.stdout.write('Demo data has been loaded into the database.\n')
 
@@ -203,7 +213,7 @@ class Command(BaseCommand):
                 os.chown(full_path, uid, gid)
                 os.chmod(full_path, 0o644)
 
-    def _load_demo_data(self, filenames):
+    def _load_demo_data(self, filenames, *, aes_key):
         """Load data from a demo fixture.
 
         This will open the provided YAML files, loading all users, groups,
@@ -214,9 +224,15 @@ class Command(BaseCommand):
         service account, and repository state can be reused in subsequent
         data files.
 
+        Passwords and hosting service account data must be encrypted using
+        ``aes_key``.
+
         Args:
             filenames (list of str):
                 The list of data filenames to load.
+
+            aes_key (bytes):
+                The key used for encrypted state.
         """
         users_map = {}
         groups_map = {}
@@ -235,7 +251,8 @@ class Command(BaseCommand):
 
             # Load the users.
             users_map.update(self._load_users(
-                fixture_data.get('users', [])))
+                fixture_data.get('users', []),
+                aes_key=aes_key))
 
             # Load the review groups.
             groups_map.update(self._load_groups(
@@ -244,7 +261,8 @@ class Command(BaseCommand):
 
             # Load the hosting service accounts.
             hosting_accounts_map.update(self._load_hosting_service_accounts(
-                fixture_data.get('hosting_service_accounts', [])))
+                fixture_data.get('hosting_service_accounts', []),
+                aes_key=aes_key))
 
             # Load the repositories.
             repositories_map.update(self._load_repositories(
@@ -258,12 +276,15 @@ class Command(BaseCommand):
                                        groups_map=groups_map,
                                        repositories_map=repositories_map)
 
-    def _load_users(self, data):
+    def _load_users(self, data, *, aes_key):
         """Load users from data.
 
         Args:
             data (list of dict):
                 The data from which to load lists of users.
+
+            aes_key (bytes):
+                The key used for encrypted state.
 
         Returns:
             dict:
@@ -272,9 +293,13 @@ class Command(BaseCommand):
         users_map = {}
 
         for user_data in data:
+            password = user_data.pop('password', None)
+
             user = User(**user_data)
 
-            if not user_data.get('password'):
+            if password:
+                user.password = aes_decrypt_base64(password, key=aes_key)
+            else:
                 user.set_unusable_password()
 
             user.save()
@@ -312,12 +337,15 @@ class Command(BaseCommand):
 
         return groups_map
 
-    def _load_hosting_service_accounts(self, data):
+    def _load_hosting_service_accounts(self, data, *, aes_key):
         """Load hosting service accounts from data.
 
         Args:
             data (list of dict):
                 The data from which to load lists of hosting service accounts.
+
+            aes_key (bytes):
+                The key used for encrypted state.
 
         Returns:
             dict:
@@ -327,7 +355,26 @@ class Command(BaseCommand):
         hosting_accounts_map = {}
 
         for hosting_account_data in data:
+            service_data = hosting_account_data.pop('data')
+            norm_service_data = {}
+
+            for key, info in service_data.items():
+                assert isinstance(info, dict)
+
+                value = info['value']
+                value_type = info['type']
+                store_as = info['store_as']
+
+                if value_type == 'encrypted':
+                    value = aes_decrypt_base64(value, key=aes_key)
+
+                if store_as == 'encrypted_password':
+                    value = encrypt_password(value)
+
+                norm_service_data[key] = value
+
             hosting_account = HostingServiceAccount.objects.create(
+                data=norm_service_data,
                 **hosting_account_data)
 
             key = (hosting_account.service_name, hosting_account.username)

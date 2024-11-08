@@ -1,6 +1,6 @@
 """Review Board Extension for adding a "notes" field."""
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from reviewboard.extensions.base import Extension
 from reviewboard.extensions.hooks import ReviewRequestFieldsHook
 from reviewboard.reviews.fields import BaseTextAreaField

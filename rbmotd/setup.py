@@ -7,10 +7,17 @@ from rbmotd import get_package_version
 
 PACKAGE = 'rbmotd'
 
+
+with open('README.md', 'r') as fp:
+    long_description = fp.read()
+
+
 setup(
     name=PACKAGE,
     version=get_package_version(),
     description='Message of the Day support for Review Board',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://www.reviewboard.org/',
     author='Beanbag, Inc.',
     author_email='support@beanbaginc.com',

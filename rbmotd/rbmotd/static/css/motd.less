@@ -1,26 +1,26 @@
 @import (reference) "@{STATIC_ROOT}rb/css/defs.less";
 
-@bg-color: #FFFA99;
-
 #motd {
-  background: @bg-color;
-  border-bottom: 1px darken(@bg-color, 55%) solid;
-  font-size: 110%;
+  background: var(--ink-p-accent-warning-bg);
+  border-bottom: 1px var(--ink-p-accent-warning-border-color) solid;
+  display: flex;
   padding: @headerbar-padding;
-  padding-left: @headerbar-padding-left - 20px;
+  padding-left: @headerbar-padding-left;
+
+  a {
+    color: var(--ink-p-link-fg-on-light);;
+    font-weight: bold;
+  }
 }
 
 #motd-close {
-  display: inline-block;
-  vertical-align: middle;
+  color: var(--ink-p-fg-on-light);
 }
 
 #motd-message {
-  vertical-align: middle;
-
-  a {
-    color: blue;
-    font-weight: bold;
-    text-decoration: none;
-  }
+  color: var(--ink-p-fg-on-light);
+  flex-grow: 1;
+  font-size: 110%;
+  margin: 0;
+  padding: 0;
 }

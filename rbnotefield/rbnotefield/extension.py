@@ -1,9 +1,18 @@
 """Review Board Extension for adding a "notes" field."""
 
-from django.utils.translation import ugettext_lazy as _
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+from django.utils.translation import gettext_lazy as _
 from reviewboard.extensions.base import Extension
 from reviewboard.extensions.hooks import ReviewRequestFieldsHook
 from reviewboard.reviews.fields import BaseTextAreaField
+
+if TYPE_CHECKING:
+    from typing import Any
+
+    from django.utils.safestring import SafeString
 
 
 class NoteField(BaseTextAreaField):
@@ -13,7 +22,10 @@ class NoteField(BaseTextAreaField):
     label = _('Note to Reviewers')
     enable_markdown = True
 
-    def render_change_entry_html(self, info):
+    def render_change_entry_html(
+        self,
+        info: dict[str, Any],
+    ) -> SafeString:
         """Render the data for the change description.
 
         Args:
@@ -32,7 +44,7 @@ class NoteField(BaseTextAreaField):
         if 'new' in info and info['new'][0] is None:
             info['new'] = ['']
 
-        return super(NoteField, self).render_change_entry_html(info)
+        return super().render_change_entry_html(info)
 
 
 class NoteFieldExtension(Extension):
@@ -45,6 +57,6 @@ class NoteFieldExtension(Extension):
                      'Description field.'),
     }
 
-    def initialize(self):
+    def initialize(self) -> None:
         """Initialize the extension."""
         ReviewRequestFieldsHook(self, 'main', [NoteField])

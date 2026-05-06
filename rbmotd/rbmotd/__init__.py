@@ -1,5 +1,7 @@
 """Message of the day extension for Review Board."""
 
+from __future__ import annotations
+
 
 # The version of rbmotd.
 #
@@ -7,7 +9,8 @@
 #
 #   (Major, Minor, Micro, Patch, alpha/beta/rc/final, Release Number, Released)
 #
-VERSION = (3, 0, 1, 0, 'final', 0, True)
+VERSION: tuple[int, int, int, int, str, int, bool] = \
+    (4, 0, 0, 0, 'alpha', 0, False)
 
 
 def get_version_string():

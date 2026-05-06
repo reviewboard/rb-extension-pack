@@ -1,0 +1,26 @@
+<script>
+$(document).ready(function() {
+    const $motd = $('#{{banner_id}}');
+
+{% if banner_can_close %}
+    $('#{{banner_id}}_close').click(function() {
+        $.cookie('{{motd_cookie}}', '{{motd_close_value}}', {
+            path: SITE_ROOT
+        });
+
+        $motd.remove();
+
+        return false;
+    });
+{% endif %}
+
+{# Check if we're in legacy mode #}
+{% if not banner_scripts_template_name %}
+    if ($.cookie('{{motd_cookie}}') !== '{{motd_close_value}}') {
+        $motd.show();
+    } else {
+        $motd.remove();
+    }
+{% endif %}
+});
+</script>

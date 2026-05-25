@@ -1,7 +1,7 @@
 Message of the Day for Review Board
 ===================================
 
-[![Review Board 7](https://img.shields.io/badge/7.x-d0e6ff?label=Review%20Board)](https://www.reviewboard.org)
+[![Review Board 8](https://img.shields.io/badge/8.x-d0e6ff?label=Review%20Board)](https://www.reviewboard.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 The Message of the Day extension for
@@ -19,7 +19,7 @@ see it.
 Requirements
 ============
 
-This requires [Review Board 7](https://www.reviewboard.org/) or higher.
+This requires [Review Board 8](https://www.reviewboard.org/) or higher.
 
 
 Installation
